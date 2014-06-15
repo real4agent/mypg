@@ -1,6 +1,3 @@
-<a href="http://zhangkaitao.github.io/es/" target="_blank">项目首页</a>
-|
-<a href="http://jinnianshilongnian.iteye.com/" target="_blank">我的博客</a> | <a href="http://url.cn/MViZN0">点击加134755960 QQ群讨论</a> | <a href="http://demo.kaifazhe.me/es/admin/index" target="_blank">演示地址（感谢134755960群友Panda支持）</a>(admin/123456 请不要执行增删改操作 谢谢)
 
 
 ##介绍
@@ -67,16 +64,6 @@
  * ie7及以上（建议ie9以上，获取更好的体验）
  * 其他浏览器暂时未测试
 
-###系统界面截图
-* <a href="http://demo.kaifazhe.me/es/admin/index" target="_blank">演示地址（感谢134755960群友Panda支持）</a>
-* <a href="https://github.com/zhangkaitao/es/blob/master/src/support/img/1.PNG?raw=true" target="_blank">点击查看1</a>
-* <a href="https://github.com/zhangkaitao/es/blob/master/src/support/img/2.PNG?raw=true" target="_blank">点击查看2</a>
-* <a href="https://github.com/zhangkaitao/es/blob/master/src/support/img/3.PNG?raw=true" target="_blank">点击查看3</a>
-
-
-##CI status
-<a href="https://travis-ci.org/zhangkaitao/es"><img src="https://travis-ci.org/zhangkaitao/es.png"/></a>
-
 
 ##如何运行
 
@@ -96,4 +83,3 @@
 
 ####3、注意
 如果你是用mvn jetty:run启动项目，默认会执行speed-up 应用，不过可以到src/main/resources/spring-speed-up.xml中把profile="development"改成任意其他的即可，或者删除<br/>
-请参考<a href='http://jinnianshilongnian.iteye.com/blog/1883013'>加速spring/hibernate应用调试时启动速度</a>
