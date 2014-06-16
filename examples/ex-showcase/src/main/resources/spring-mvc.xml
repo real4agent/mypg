@@ -75,7 +75,7 @@
 
     </mvc:annotation-driven>
 
-    <mvc:view-controller path="/" view-name="redirect:/admin/index" />
+    <mvc:view-controller path="/" view-name="redirect:/admin/index"/>
     <!-- 当在web.xml 中   DispatcherServlet使用 <url-pattern>/</url-pattern> 映射时，能映射静态资源 -->
     <mvc:default-servlet-handler/>
     <!-- 静态资源映射 -->
@@ -95,6 +95,12 @@
             <mvc:exclude-mapping path="/admin/polling"/>
             <bean class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/static/**"/>
+            <bean class="com.realaicy.pg.extra.debug.interceptor.TraceRequest"/>
+        </mvc:interceptor>
+
         <!--<mvc:interceptor>-->
         <!--<mvc:mapping path="/**"/>-->
         <!--<bean class="cn.javass.test.interceptor.TestInterceptor"/>-->

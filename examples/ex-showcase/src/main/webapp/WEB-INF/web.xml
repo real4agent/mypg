@@ -50,7 +50,7 @@
     <filter>
         <filter-name>AccessLogFilter</filter-name>
         <filter-class>com.realaicy.pg.core.web.filter.AccessLogFilter</filter-class>
-        <async-supported>true</async-supported>
+        <!--<async-supported>true</async-supported>-->
         <init-param>
             <param-name>blackListURL</param-name>
             <param-value>/static/**,*.js,*.css,*.jpg,*.gif,*.png,*.ico,/admin/monitor/druid/**</param-value>

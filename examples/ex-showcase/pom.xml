@@ -3,7 +3,7 @@
     <parent>
         <artifactId>ex-parent</artifactId>
         <groupId>com.realaicy.pangoo.examples</groupId>
-        <version>0.9.3</version>
+        <version>0.9.4</version>
         <relativePath>../ex-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
