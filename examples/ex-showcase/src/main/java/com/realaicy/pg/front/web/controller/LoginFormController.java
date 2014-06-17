@@ -2,10 +2,13 @@ package com.realaicy.pg.front.web.controller;
 
 import com.realaicy.pg.core.Constants;
 import com.realaicy.pg.sys.user.entity.User;
+import com.realaicy.pg.sys.user.service.UserService;
 import com.realaicy.pg.sys.user.service.UserStatusHistoryService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -17,8 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * <p/>
- * Created by realaicy on 14-3-24.
+ * 控制器：用户登录
  *
  * @author realaicy
  * @version 1.1
@@ -31,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LoginFormController {
 
+    public static final Logger log = LoggerFactory.getLogger(LoginFormController.class);
+
     @Value(value = "${shiro.login.url}")
     private String loginUrl;
 
@@ -40,7 +44,11 @@ public class LoginFormController {
     @Autowired
     private UserStatusHistoryService userStatusHistoryService;
 
-    @RequestMapping(value = {"/{login:login;?.*}"}) //spring3.2.2 bug. But fixed in spring 3.2.3 @RequestMapping(value = {"/login"})
+    @Autowired
+    private UserService userService;
+
+    //@RequestMapping(value = {"/{login:login;?.*}"}) //spring3.2.2 bug. But fixed in spring 3.2.3 @RequestMapping(value = {"/login"})
+    @RequestMapping(value = {"/login"})
     public String loginForm(HttpServletRequest request, ModelMap model) {
 
         //表示退出
@@ -63,7 +71,6 @@ public class LoginFormController {
             model.addAttribute(Constants.ERROR, messageSource.getMessage("jcaptcha.validate.error", null, null));
         }
 
-
         //表示用户锁定了 @see org.apache.shiro.web.filter.user.SysUserFilter
         if (!StringUtils.isEmpty(request.getParameter("blocked"))) {
             User user = (User) request.getAttribute(Constants.CURRENT_USER);
@@ -82,12 +89,20 @@ public class LoginFormController {
             model.addAttribute(Constants.ERROR, shiroLoginFailureEx.getMessage());
         }
 
-        //如果用户直接到登录页面 先退出一下
-        //原因：isAccessAllowed实现是subject.isAuthenticated()---->即如果用户验证通过 就允许访问
-        // 这样会导致登录一直死循环
         Subject subject = SecurityUtils.getSubject();
+
+        //如果用户已经登录，则直接依据其身份直接调转到相应的默认页
         if (subject != null && subject.isAuthenticated()) {
-            subject.logout();
+            log.debug("LoginFormController:=============================================================");
+            log.debug("subject != null && subject.isAuthenticated(): subject:\t {}", subject.getPrincipal());
+            //subject.logout();
+            String username = (String) SecurityUtils.getSubject().getPrincipal();
+            User user = userService.findByUsername(username);
+            if (user != null && Boolean.TRUE.equals(user.getAdmin())) {
+                return "redirect:" + "/admin/index";
+            }
+
+            return "redirect:" + "/";
         }
 
         //如果同时存在错误消息 和 普通消息  只保留错误消息

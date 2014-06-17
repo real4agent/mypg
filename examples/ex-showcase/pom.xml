@@ -285,7 +285,7 @@
                 <jpa.databasePlatform>org.hibernate.dialect.MySQL5InnoDBDialect</jpa.databasePlatform>
                 <log.dir>/data/backup/es</log.dir>
 
-                <shiro.uid.cookie.domain>sishuok.com</shiro.uid.cookie.domain>
+                <shiro.uid.cookie.domain></shiro.uid.cookie.domain>
                 <shiro.uid.cookie.path>/</shiro.uid.cookie.path>
 
             </properties>

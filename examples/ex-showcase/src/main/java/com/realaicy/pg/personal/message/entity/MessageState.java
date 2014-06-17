@@ -1,10 +1,15 @@
 package com.realaicy.pg.personal.message.entity;
 
 /**
- * 消息状态
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-22 下午2:01
- * <p>Version: 1.0
+ * 枚举：消息状态
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 public enum MessageState {
 

@@ -3,6 +3,7 @@ package com.realaicy.pg.core.utils;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.realaicy.pg.core.Constants;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * 日志处理工具类。
@@ -40,22 +40,28 @@ public class LogUtils {
      * @param request http请求
      */
     public static void logAccess(HttpServletRequest request) {
-        String username = getUsername();
+
+        String username = (String) request.getSession().getAttribute(Constants.CURRENT_USERNAME);
+        String username2 = (String) SecurityUtils.getSubject().getPrincipal();
+
         String jsessionId = request.getRequestedSessionId();
         String ip = IpUtils.getIpAddr(request);
         String accept = request.getHeader("accept");
-        String userAgent = request.getHeader("User-Agent");
+        //String userAgent = request.getHeader("User-Agent");
         String url = request.getRequestURI();
+        String method = request.getMethod();
         String params = getParams(request);
         String headers = getHeaders(request);
 
         StringBuilder s = new StringBuilder();
         s.append(getBlock(username));
+        s.append(getBlock(username2));
         s.append(getBlock(jsessionId));
         s.append(getBlock(ip));
         s.append(getBlock(accept));
-        s.append(getBlock(userAgent));
+        //s.append(getBlock(userAgent));
         s.append(getBlock(url));
+        s.append(getBlock(method));
         s.append(getBlock(params));
         s.append(getBlock(headers));
         s.append(getBlock(request.getHeader("Referer")));
@@ -70,7 +76,7 @@ public class LogUtils {
      * @param e 异常对象
      */
     public static void logError(String message, Throwable e) {
-        String username = getUsername();
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
         StringBuilder s = new StringBuilder();
         s.append(getBlock("exception"));
         s.append(getBlock(username));
@@ -85,13 +91,13 @@ public class LogUtils {
      * @param request http请求
      */
     public static void logPageError(HttpServletRequest request) {
-        String username = getUsername();
+
+        String username = (String) request.getSession().getAttribute(Constants.CURRENT_USERNAME);
 
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         String message = (String) request.getAttribute("javax.servlet.error.message");
         String uri = (String) request.getAttribute("javax.servlet.error.request_uri");
         Throwable t = (Throwable) request.getAttribute("javax.servlet.error.exception");
-
 
         if (statusCode == null) {
             statusCode = 0;
@@ -123,11 +129,13 @@ public class LogUtils {
         return "[" + msg.toString() + "]";
     }
 
+    @SuppressWarnings("unchecked")
     protected static String getParams(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         return JSON.toJSONString(params);
     }
 
+    @SuppressWarnings("unchecked")
     private static String getHeaders(HttpServletRequest request) {
         Map<String, List<String>> headers = Maps.newHashMap();
         Enumeration<String> namesEnumeration = request.getHeaderNames();
@@ -143,9 +151,11 @@ public class LogUtils {
         return JSON.toJSONString(headers);
     }
 
-    protected static String getUsername() {
-        return (String) SecurityUtils.getSubject().getPrincipal();
-    }
+//    protected static String getUsername() {
+//        //return (String) SecurityUtils.getSubject().getPrincipal();
+////        return SecurityUtils.getSubject().getPrincipal() ==
+////                null ? "null" : SecurityUtils.getSubject().getPrincipal().toString();
+//    }
 
     public static Logger getAccessLog() {
         return ACCESS_LOG;

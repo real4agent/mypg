@@ -33,17 +33,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
+                <version>${mvn.plugin.clean.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2</version>
+                <version>${mvn.plugin.source.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
+                <version>${mvn.plugin.compiler.version}</version>
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
@@ -53,12 +53,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>2.4</version>
+                <version>${mvn.plugin.install.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>${mvn.plugin.jar.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -71,7 +71,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
+                <version>${mvn.plugin.war.version}</version>
                 <configuration>
                     <warName>${project.artifactId}</warName>
                 </configuration>
@@ -81,7 +81,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.13</version>
+                <version>${mvn.plugin.surefire.version}</version>
                 <configuration>
                     <argLine>-Xmx128M</argLine>
                     <includes>
@@ -106,7 +106,7 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-surefire-plugin</artifactId>
-                            <version>2.13</version>
+                            <version>${mvn.plugin.surefire.version}</version>
                             <configuration>
                                 <argLine>-Xmx128M</argLine>
                                 <includes>
@@ -210,7 +210,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.0-beta-1</version>
+                <version>${mvn.plugin.enforcer.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-versions</id>
@@ -306,7 +306,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.7</version>
+            <version>${common.codec.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -514,8 +514,8 @@
                     <artifactId>hibernate</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -525,6 +525,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- apache shiro 相关jar包 -->
@@ -532,6 +538,12 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
             <version>${shiro.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -542,11 +554,27 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-aspectj</artifactId>
             <version>${shiro.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjrt</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjweaver</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-ehcache</artifactId>
             <version>${shiro.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sf.ehcache</groupId>
+                    <artifactId>ehcache-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -613,6 +641,10 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -648,6 +680,12 @@
             <groupId>com.octo.captcha</groupId>
             <artifactId>jcaptcha</artifactId>
             <version>${jcaptcha.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.octo.captcha</groupId>
@@ -677,52 +715,38 @@
         <support.basedir>${project.parent.basedir}/src/support</support.basedir>
         <site.basedir>${project.parent.basedir}</site.basedir>
 
-        <spring.version>3.2.9.RELEASE</spring.version>
+        <spring.version>3.2.8.RELEASE</spring.version>
         <spring.data.jpa.version>1.5.2.RELEASE</spring.data.jpa.version>
 
-        <commons-lang3.version>3.3.2</commons-lang3.version>
-        <common-collections.version>3.2.1</common-collections.version>
-        <commons-io.version>2.4</commons-io.version>
-        <common.fileupload.version>1.2.2</common.fileupload.version>
-        <common.compress.version>1.5</common.compress.version>
-
-
-        <asm.version>4.0</asm.version>
-        <cglib.version>3.0</cglib.version>
-
-
-        <guava.version>13.0.1</guava.version>
-
-        <ant.version>1.9.1</ant.version>
-
-        <junit.version>4.11</junit.version>
-        <mockito.version>1.9.5</mockito.version>
-        <powermock.version>1.5</powermock.version>
-        <h2.version>1.3.170</h2.version>
-        <jetty.version>8.1.8.v20121106</jetty.version>
+        <hibernate.core.version>4.2.13.Final</hibernate.core.version>
+        <hibernate.ehcache.version>4.2.13.Final</hibernate.ehcache.version>
+        <hibernate.commons.annotaions.version>4.0.2.Final</hibernate.commons.annotaions.version>
+        <hibernate.validator.version>4.3.1.Final</hibernate.validator.version>
 
         <servlet.version>2.5</servlet.version>
         <jsp.version>2.1</jsp.version>
         <jstl.version>1.2</jstl.version>
         <standard.version>1.1.2</standard.version>
 
-        <aspectj.version>1.7.2</aspectj.version>
-
-
-        <hibernate.core.version>4.2.13.Final</hibernate.core.version>
-        <hibernate.ehcache.version>4.2.13.Final</hibernate.ehcache.version>
-        <hibernate.commons.annotaions.version>4.0.4.Final</hibernate.commons.annotaions.version>
-        <hibernate.validator.version>4.3.1.Final</hibernate.validator.version>
-
+        <shiro.version>1.2.3</shiro.version>
+        <asm.version>4.0</asm.version>
+        <cglib.version>3.0</cglib.version>
+        <aspectj.version>1.7.4</aspectj.version>
         <javassist.version>3.12.1.GA</javassist.version>
+        <ehcache.core.version>2.6.9</ehcache.core.version>
 
-        <ehcache.core.version>2.6.5</ehcache.core.version>
+        <commons-lang3.version>3.3.2</commons-lang3.version>
+        <common-collections.version>3.2.1</common-collections.version>
+        <commons-io.version>2.4</commons-io.version>
+        <common.fileupload.version>1.2.2</common.fileupload.version>
+        <common.compress.version>1.5</common.compress.version>
+        <common.codec.version>1.7</common.codec.version>
 
-        <shiro.version>1.2.2</shiro.version>
-        <!--<quartz.version>1.8.6</quartz.version>-->
 
-        <slf4j.version>1.7.5</slf4j.version>
-        <logback.version>1.0.13</logback.version>
+        <guava.version>13.0.1</guava.version>
+        <ant.version>1.9.1</ant.version>
+        <slf4j.version>1.7.6</slf4j.version>
+        <logback.version>1.1.2</logback.version>
 
         <druid.version>0.2.23</druid.version>
         <fastjson.version>1.1.34</fastjson.version>
@@ -732,8 +756,26 @@
         <joda-time.version>2.2</joda-time.version>
         <prettytime.version>2.1.2.Final</prettytime.version>
         <jcaptcha.version>2.0-alpha-1</jcaptcha.version>
-
         <jsoup.version>1.7.2</jsoup.version>
+
+        <junit.version>4.11</junit.version>
+        <mockito.version>1.9.5</mockito.version>
+        <powermock.version>1.5</powermock.version>
+        <h2.version>1.3.170</h2.version>
+        <jetty.version>8.1.8.v20121106</jetty.version>
+
+
+        <!--<quartz.version>1.8.6</quartz.version>-->
+
+
+        <mvn.plugin.clean.version>2.5</mvn.plugin.clean.version>
+        <mvn.plugin.source.version>2.2.1</mvn.plugin.source.version>
+        <mvn.plugin.compiler.version>3.1</mvn.plugin.compiler.version>
+        <mvn.plugin.install.version>2.5.1</mvn.plugin.install.version>
+        <mvn.plugin.jar.version>2.4</mvn.plugin.jar.version>
+        <mvn.plugin.war.version>2.4</mvn.plugin.war.version>
+        <mvn.plugin.surefire.version>2.17</mvn.plugin.surefire.version>
+        <mvn.plugin.enforcer.version>1.3.1</mvn.plugin.enforcer.version>
     </properties>
 
 </project>

@@ -56,7 +56,19 @@
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{0} %C{0}  %M - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="shiro" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${log.dir}/shiro-debug-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level %logger{0} %M - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -76,10 +88,21 @@
     <logger name="com.realaicy.pg.extra.debug.interceptor" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
+
+
     <!-- temp trace useing file -->
     <logger name="pg-debug-request" level="debug" additivity="false">
         <appender-ref ref="temptrace"/>
     </logger>
+    <logger name="com.realaicy.pg.front.web.controller.LoginFormController" level="debug" additivity="false">
+        <appender-ref ref="temptrace"/>
+    </logger>
+    <logger name="pg-debug-security" level="debug" additivity="false">
+        <appender-ref ref="temptrace"/>
+    </logger>
+    <!--<logger name="org.apache.shiro" level="trace" additivity="false">-->
+        <!--<appender-ref ref="shiro"/>-->
+    <!--</logger>-->
 
 </configuration>
 

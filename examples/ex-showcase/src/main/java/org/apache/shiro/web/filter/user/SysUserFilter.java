@@ -7,6 +7,8 @@ import com.realaicy.pg.sys.user.service.UserService;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletRequest;
@@ -31,6 +33,8 @@ import java.io.IOException;
  * @since 1.1
  */
 public class SysUserFilter extends AccessControlFilter {
+
+    private static final Logger mylog = LoggerFactory.getLogger("pg-debug-security");
 
     @Autowired
     private UserService userService;
@@ -74,36 +78,24 @@ public class SysUserFilter extends AccessControlFilter {
 
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
-
+        mylog.debug("In preHandle==========================================================");
         Subject subject = getSubject(request, response);
-        if (subject == null) {
-            return true;
-        }
 
         String username = (String) subject.getPrincipal();
+        mylog.debug("username = {} ", username);
         //此处注意缓存 防止大量的查询db
         User user = userService.findByUsername(username);
-        //把当前用户放到session中
+        //把当前用户放到request中
         request.setAttribute(Constants.CURRENT_USER, user);
         //druid监控需要
-        ((HttpServletRequest)request).getSession().setAttribute(Constants.CURRENT_USERNAME, username);
+        ((HttpServletRequest) request).getSession().setAttribute(Constants.CURRENT_USERNAME, username);
 
         return true;
+        //return super.preHandle(request, response);
     }
-
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
-        User user = (User) request.getAttribute(Constants.CURRENT_USER);
-        if (user == null) {
-            return true;
-        }
-
-        if (Boolean.TRUE.equals(user.getDeleted()) || user.getStatus() == UserStatus.blocked) {
-            getSubject(request, response).logout();
-            saveRequestAndRedirectToLogin(request, response);
-            return false;
-        }
         return true;
     }
 

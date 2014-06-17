@@ -8,6 +8,8 @@ import com.realaicy.pg.sys.user.utils.UserLogUtils;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,8 @@ import javax.annotation.PostConstruct;
  */
 @Service
 public class PasswordService {
+
+    private static final Logger log = LoggerFactory.getLogger(PasswordService.class);
 
     @Autowired
     private CacheManager ehcacheManager;
@@ -94,6 +98,8 @@ public class PasswordService {
     }
 
     public boolean matches(User user, String newPassword) {
+        log.debug("Mothod:matches-----------pw in db:{}\t---pw from user input:{}\t---pw cal:{}",
+                user.getPassword(), newPassword, encryptPassword(user.getUsername(), newPassword, user.getSalt()));
         return user.getPassword().equals(encryptPassword(user.getUsername(), newPassword, user.getSalt()));
     }
 

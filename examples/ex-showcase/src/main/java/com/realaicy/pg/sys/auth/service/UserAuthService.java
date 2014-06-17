@@ -139,7 +139,8 @@ public class UserAuthService {
                 String actualResourceIdentity = resourceService.findActualResourceIdentity(resource);
 
                 //不可用 即没查到 或者标识字符串不存在
-                if (resource == null || StringUtils.isEmpty(actualResourceIdentity) || Boolean.FALSE.equals(resource.getShow())) {
+                if (resource == null || StringUtils.isEmpty(actualResourceIdentity) ||
+                        Boolean.FALSE.equals(resource.getShow())) {
                     continue;
                 }
 

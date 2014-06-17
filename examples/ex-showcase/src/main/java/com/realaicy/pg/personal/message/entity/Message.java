@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.personal.message.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -17,21 +12,27 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 系统消息
- * 1、收件箱和发件箱内的消息默认365天后被放入垃圾箱
- * 2、垃圾箱内的消息30天后自动物理删除
- * 3、垃圾箱内的消息只有只有当收件人和发件人 把消息都从垃圾箱中删除后才能物理删除
+ * 表：系统消息
+ * <p/>
+ * 1、收件箱和发件箱内的消息默认365天后被放入垃圾箱<br/>
+ * 2、垃圾箱内的消息30天后自动物理删除<br/>
+ * 3、垃圾箱内的消息只有只有当收件人和发件人 把消息都从垃圾箱中删除后才能物理删除<br/>
  * 4、收藏箱的不能删除
  * <p/>
- * 如果type==system_message_all表示是发给所有人的消息 策略如下：
- * 1、首先在展示时（第一页），会会自动查所有的system_message_all
+ * 如果type==system_message_all表示是发给所有人的消息 策略如下：<br/>
+ * 1、首先在展示时（第一页），系统自动查所有的system_message_all<br/>
  * 2、如果用户阅读了，直接复制一份 放入它的收件箱 状态改为system_message
  * <p/>
  * 如果消息是草稿 那么收件人状态是null
  * <p/>
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-22 下午1:51
- * <p>Version: 1.0
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "personal_message")
@@ -125,8 +126,6 @@ public class Message extends BaseEntity<Long> {
     @Column(name = "parent_ids")
     private String parentIds;
 
-
-
     public Long getSenderId() {
         return senderId;
     }
@@ -160,14 +159,14 @@ public class Message extends BaseEntity<Long> {
     }
 
     public MessageContent getContent() {
-        if(contents != null && contents.size() > 0) {
+        if (contents != null && contents.size() > 0) {
             return contents.iterator().next();
         }
         return null;
     }
 
     public void setContent(MessageContent content) {
-        if(contents == null) {
+        if (contents == null) {
             contents = new HashSet<MessageContent>();
         }
         contents.add(content);

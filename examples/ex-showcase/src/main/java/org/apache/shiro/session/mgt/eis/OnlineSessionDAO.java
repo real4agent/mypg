@@ -4,8 +4,11 @@ import com.realaicy.pg.sys.user.entity.UserOnline;
 import com.realaicy.pg.sys.user.service.UserOnlineService;
 import org.apache.shiro.ShiroConstants;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.OnlineSession;
 import org.apache.shiro.session.mgt.OnlineSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
@@ -24,6 +27,8 @@ import java.util.Date;
  * @since 1.1
  */
 public class OnlineSessionDAO extends EnterpriseCacheSessionDAO {
+
+    private static final Logger mylog = LoggerFactory.getLogger("pg-debug-security");
     /**
      * 上次同步数据库的时间戳
      */
@@ -84,7 +89,16 @@ public class OnlineSessionDAO extends EnterpriseCacheSessionDAO {
     }
 
     @Override
+    public Session readSession(Serializable sessionId) throws UnknownSessionException {
+        //mylog.debug("In readSession==========================================================");
+
+        return super.readSession(sessionId);
+    }
+
+    @Override
     protected Session doReadSession(Serializable sessionId) {
+        mylog.debug("In doReadSession==========================================================");
+
         UserOnline userOnline = userOnlineService.findOne(String.valueOf(sessionId));
         if (userOnline == null) {
             return null;

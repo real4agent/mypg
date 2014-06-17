@@ -1,7 +1,7 @@
 
 
 ##介绍
-* pangoo是一个JavaEE企业级项目的快速开发的脚手架，提供了底层抽象和通用功能，拿来即用。
+* pangoo是一个JavaEE企业级项目的快速开发的脚手架，提供了底层抽象和通用功能，拿来即用。HAHA
 
 ### 核心功能
 * 通用的DAO、Service、Controller抽象，从CRUD中解放

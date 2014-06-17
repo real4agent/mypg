@@ -10,15 +10,14 @@ import com.realaicy.pg.sys.resource.entity.tmp.Menu;
 import com.realaicy.pg.sys.resource.repository.ResourceRepository;
 import com.realaicy.pg.sys.user.entity.User;
 import org.apache.shiro.authz.permission.WildcardPermission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * SD-JPA-Service：资源
@@ -36,23 +35,28 @@ import java.util.Set;
 @Service
 public class ResourceService extends BaseTreeableService<Resource, Long> {
 
+    private static final Logger log = LoggerFactory.getLogger("pg-debug-sys");
+
     @SuppressWarnings("UnusedDeclaration")
     @Autowired
     @BaseComponent
     private ResourceRepository resourceRepository;
-
     @Autowired
     private UserAuthService userAuthService;
 
     @SuppressWarnings("unchecked")
     public static List<Menu> convertToMenus(List<Resource> resources) {
 
+        log.debug("menu resources num == {}", resources.size());
+
         if (resources.size() == 0) {
             return Collections.EMPTY_LIST;
         }
 
+        //根目录
         Menu root = convertToMenu(resources.remove(resources.size() - 1));
 
+        //递归子目录
         recursiveMenu(root, resources);
         List<Menu> menus = root.getChildren();
         removeNoLeafMenu(menus);
@@ -88,6 +92,8 @@ public class ResourceService extends BaseTreeableService<Resource, Long> {
     }
 
     private static Menu convertToMenu(Resource resource) {
+        log.debug("id=={}\tname=={}\ticon=={}\turl=={}",
+                resource.getId(), resource.getName(), resource.getIcon(), resource.getUrl());
         return new Menu(resource.getId(), resource.getName(), resource.getIcon(), resource.getUrl());
     }
 
@@ -146,8 +152,11 @@ public class ResourceService extends BaseTreeableService<Resource, Long> {
                         .addSort(new Sort(Sort.Direction.DESC, "parentId", "weight"));
 
         List<Resource> resources = findAllWithSort(searchable);
+        log.debug("All resources num=={}", resources.size());
 
         Set<String> userPermissions = userAuthService.findStringPermissions(user);
+        log.debug("user=={} \t userPermissions==\t{}", user.getUsername(),
+                Arrays.toString(userPermissions.toArray(new String[userPermissions.size()])));
 
         Iterator<Resource> iter = resources.iterator();
         while (iter.hasNext()) {

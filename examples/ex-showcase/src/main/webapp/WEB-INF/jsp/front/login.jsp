@@ -27,6 +27,7 @@
                 <pg:BackURL hiddenInput="true"/>
                 <div class="control-group">
                     <label for="username">用户名、邮箱或手机号^_^</label>
+
                     <div class="input-prepend">
                         <span class="add-on icon-user"></span>
                         <input type="text" id="username" name="username" value="${param.username}"
@@ -35,6 +36,7 @@
                 </div>
                 <div class="control-group">
                     <label for="password">密码</label>
+
                     <div class="input-prepend">
                         <span class="add-on icon-key"></span>
                         <input type="password" id="password" name="password"
@@ -42,21 +44,27 @@
                     </div>
                 </div>
                 <%-- jcaptchaEbabled 在JCaptchaValidateFilter设置 --%>
+                <%--suppress ELValidationInJSP --%>
                 <c:if test="${jcaptchaEbabled}">
+
                     <div class="control-group">
                         <label for="jcaptchaCode">验证码</label>
+
                         <div class="input-prepend">
                             <span class="add-on icon-circle-blank"></span>
                             <input type="text" id="jcaptchaCode" name="jcaptchaCode"
                                    class="input-medium validate[required,ajax[ajaxJcaptchaCall]]" placeholder="请输入验证码">
                         </div>
-                        <img class="jcaptcha-btn jcaptcha-img" style="margin-left: 10px;" src="${ctx}/jcaptcha.jpg" title="点击更换验证码">
+                            <%--suppress ELValidationInJSP --%>
+                        <img class="jcaptcha-btn jcaptcha-img" style="margin-left: 10px;" src="${ctx}/jcaptcha.jpg"
+                             title="点击更换验证码">
                         <a class="jcaptcha-btn btn btn-link">换一张</a>
                     </div>
                 </c:if>
 
                 <div class="control-group">
-                    <label class="checkbox remember"><input type="checkbox" name="rememberMe" value="true">下次自动登录pg</label>
+                    <label class="checkbox remember"><input type="checkbox" name="rememberMe"
+                                                            value="true">下次自动登录pg</label>
                     <input id="submitForm" type="submit" class="btn btn-login pull-left" value="登录">
                 </div>
 
@@ -73,20 +81,21 @@
 </footer>
 <pg:contentFooter/>
 <script type="text/javascript">
-    $(function() {
-        $(".jcaptcha-btn").click(function() {
+    $(function () {
+        $(".jcaptcha-btn").click(function () {
             var img = $(".jcaptcha-img");
             var imageSrc = img.attr("src");
-            if(imageSrc.indexOf("?") > 0) {
+            if (imageSrc.indexOf("?") > 0) {
                 imageSrc = imageSrc.substr(0, imageSrc.indexOf("?"));
             }
             imageSrc = imageSrc + "?" + new Date().getTime();
             img.attr("src", imageSrc);
         });
-        $.validationEngineLanguage.allRules.ajaxJcaptchaCall={
+        $.validationEngineLanguage.allRules.ajaxJcaptchaCall = {
+            <%--suppress ELValidationInJSP --%>
             "url": "${ctx}/jcaptcha-validate",
             "alertTextLoad": "* 正在验证，请稍等。。。"
         };
-        $("#loginForm").validationEngine({scroll:false});
+        $("#loginForm").validationEngine({scroll: false});
     });
 </script>

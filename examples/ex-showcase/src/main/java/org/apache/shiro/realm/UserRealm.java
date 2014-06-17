@@ -14,15 +14,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-
 public class UserRealm extends AuthorizingRealm {
 
+    private static final Logger log = LoggerFactory.getLogger("pg-error");
+    private static final Logger mylog = LoggerFactory.getLogger("pg-debug-security");
+    private static final String OR_OPERATOR = " or ";
+    private static final String AND_OPERATOR = " and ";
+    private static final String NOT_OPERATOR = "not ";
     @Autowired
     private UserService userService;
     @Autowired
     private UserAuthService userAuthService;
-
-    private static final Logger log = LoggerFactory.getLogger("pg-error");
 
     @Autowired
     public UserRealm(ApplicationContext ctx) {
@@ -34,22 +36,6 @@ public class UserRealm extends AuthorizingRealm {
         //所以此处我们先getBean一下 就没有问题了
         ctx.getBeansOfType(SimpleBaseRepositoryFactoryBean.class);
     }
-
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String username = (String) principals.getPrimaryPrincipal();
-        User user = userService.findByUsername(username);
-
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        authorizationInfo.setRoles(userAuthService.findStringRoles(user));
-        authorizationInfo.setStringPermissions(userAuthService.findStringPermissions(user));
-
-        return authorizationInfo;
-    }
-
-    private static final String OR_OPERATOR = " or ";
-    private static final String AND_OPERATOR = " and ";
-    private static final String NOT_OPERATOR = "not ";
 
     /**
      * 支持or and not 关键词  不支持and or混用
@@ -80,17 +66,23 @@ public class UserRealm extends AuthorizingRealm {
         }
     }
 
-    private boolean isPermittedWithNotOperator(PrincipalCollection principals, String permission) {
-        if (permission.startsWith(NOT_OPERATOR)) {
-            return !super.isPermitted(principals, permission.substring(NOT_OPERATOR.length()));
-        } else {
-            return super.isPermitted(principals, permission);
-        }
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        mylog.debug("In doGetAuthorizationInfo==========================================================");
+
+        String username = (String) principals.getPrimaryPrincipal();
+        User user = userService.findByUsername(username);
+
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        authorizationInfo.setRoles(userAuthService.findStringRoles(user));
+        authorizationInfo.setStringPermissions(userAuthService.findStringPermissions(user));
+
+        return authorizationInfo;
     }
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-
+        mylog.debug("In doGetAuthenticationInfo=========================================================");
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername().trim();
         String password = "";
@@ -114,5 +106,13 @@ public class UserRealm extends AuthorizingRealm {
             throw new AuthenticationException(new UserException("user.unknown.error", null));
         }
         return new SimpleAuthenticationInfo(user.getUsername(), password.toCharArray(), getName());
+    }
+
+    private boolean isPermittedWithNotOperator(PrincipalCollection principals, String permission) {
+        if (permission.startsWith(NOT_OPERATOR)) {
+            return !super.isPermitted(principals, permission.substring(NOT_OPERATOR.length()));
+        } else {
+            return super.isPermitted(principals, permission);
+        }
     }
 }

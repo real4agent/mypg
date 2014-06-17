@@ -98,6 +98,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/static/**"/>
+            <mvc:exclude-mapping path="/admin/polling"/>
             <bean class="com.realaicy.pg.extra.debug.interceptor.TraceRequest"/>
         </mvc:interceptor>
 

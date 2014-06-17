@@ -5,6 +5,8 @@
 
     <!-- spring工具类 方便在非spring管理环境中获取bean -->
     <bean id="springUtils" class="com.realaicy.pg.core.utils.SpringUtils"/>
+    <bean id="logUtils" class="com.realaicy.pg.core.utils.LogUtils"/>
+
 
     <!-- 设置默认的文件上传路径 -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

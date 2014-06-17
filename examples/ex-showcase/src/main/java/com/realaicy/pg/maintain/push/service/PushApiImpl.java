@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.push.service;
 
 import com.google.common.collect.Maps;
@@ -13,9 +8,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-17 下午2:28
- * <p>Version: 1.0
+ * Push API 实现类
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Service
 public class PushApiImpl implements PushApi {

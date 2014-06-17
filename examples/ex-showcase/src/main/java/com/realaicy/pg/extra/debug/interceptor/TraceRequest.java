@@ -27,19 +27,18 @@ public class TraceRequest extends HandlerInterceptorAdapter {
 
     public static final Logger log = LoggerFactory.getLogger("pg-debug-request");
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        log.debug("###################################################################################");
-        log.debug("===================== My Var begin==========================");
-        try {
-            log.debug(SecurityUtils.getSubject().getPrincipal().toString());
-        } catch (Exception e) {
-
+        log.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        log.debug("preHandle:===========================================================================");
+        if (SecurityUtils.getSubject().getPrincipal() != null)
+            log.debug("user= \t {}", SecurityUtils.getSubject().getPrincipal().toString());
+        else {
+            log.debug("user= \t {}", "nullPrincipal");
         }
-
-        log.debug("===================== My Var  end==========================");
-        log.debug("=====================request begin==========================");
+        log.debug("===request info begin================================================================");
         String uri = request.getRequestURI();
         String queryString = request.getQueryString();
         if (StringUtils.isNotBlank(queryString)) {
@@ -47,46 +46,47 @@ public class TraceRequest extends HandlerInterceptorAdapter {
         }
         log.debug("{}:{}", request.getMethod(), uri);
         log.debug("remote ip:{}  sessionId:{}  ", IpUtils.getIpAddr(request), request.getRequestedSessionId());
-        log.debug("===header begin============================================");
+        log.debug("===header begin======================================================================");
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String name = headerNames.nextElement();
             String value = headersToString(request.getHeaders(name));
             log.debug("{}={}", name, value);
         }
-        log.debug("===header   end============================================");
-        log.debug("===parameter begin==========================================");
+        log.debug("===header   end======================================================================");
+        log.debug("===parameter begin===================================================================");
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String name = parameterNames.nextElement();
             String value = StringUtils.join(request.getParameterValues(name), "||");
             log.debug("{}={}", name, value);
         }
-        log.debug("===parameter   end==========================================");
-        log.debug("=====================request   end==========================");
+        log.debug("===parameter   end===================================================================");
+        log.debug("===request   end=====================================================================");
         return super.preHandle(request, response, handler);
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
-        log.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
+        log.debug("postHandle:==========================================================================");
+
         if (modelAndView != null)
-            log.debug("view name is:{}", modelAndView.getViewName());
-        if (modelAndView.getView() != null)
-            log.debug("view name222 is:{}", modelAndView.getView().toString());
+            log.debug("view name is=\t{}", modelAndView.getViewName());
 
         if (handler != null)
-            log.debug("handler name is:{}  ", handler.toString());
+            log.debug("handler name is=\t{}  ", handler.toString());
+
         super.postHandle(request, response, handler, modelAndView);
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
                                 Exception ex) throws Exception {
-        log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        log.debug("afterCompletion:=====================================================================");
         if (handler != null)
-            log.debug("handler name is:{}  ", handler.toString());
+            log.debug("handler name is=\t{}  ", handler.toString());
         super.afterCompletion(request, response, handler, ex);
     }
 
