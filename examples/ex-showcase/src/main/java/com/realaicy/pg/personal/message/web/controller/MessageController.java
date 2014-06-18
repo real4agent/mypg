@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.personal.message.web.controller;
 
 import com.realaicy.pg.core.Constants;
@@ -29,9 +24,15 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-22 下午2:40
- * <p>Version: 1.0
+ * 控制器：消息
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping("/admin/personal/message")
@@ -75,11 +76,12 @@ public class MessageController extends BaseController<Message, Long> {
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "table=true")
     @PageableDefaults(sort = "id=desc")
     public String listTableDefault(@CurrentUser User user,
-                            Pageable pageable,
-                            Model model) {
+                                   Pageable pageable,
+                                   Model model) {
         list(user, MessageState.in_box, pageable, model);
         return viewName("listTable");
     }
+
     @RequestMapping(value = "{state}/list", method = RequestMethod.GET, headers = "table=true")
     @PageableDefaults(sort = "id=desc")
     public String listTable(@CurrentUser User user,
@@ -151,7 +153,6 @@ public class MessageController extends BaseController<Message, Long> {
         message.setSenderId(user.getId());
         messageApi.send(message);
 
-
         redirectAttributes.addFlashAttribute(Constants.MESSAGE, "发送成功！");
         return redirectToUrl(viewName(MessageState.out_box + "/list"));
     }
@@ -188,7 +189,6 @@ public class MessageController extends BaseController<Message, Long> {
         return redirectToUrl(viewName(MessageState.out_box + "/list"));
     }
 
-
     @RequestMapping(value = "/{parent}/forward", method = RequestMethod.GET)
     public String showForwardForm(@PathVariable("parent") Message parent, Model model) {
 
@@ -222,7 +222,6 @@ public class MessageController extends BaseController<Message, Long> {
             RedirectAttributes redirectAttributes,
             Model model) {
 
-
         User receiver = userService.findByUsername(username);
         if (receiver == null) {
             result.rejectValue("receiverId", "receiver.not.exists");
@@ -243,7 +242,6 @@ public class MessageController extends BaseController<Message, Long> {
         return redirectToUrl(viewName(MessageState.out_box + "/list"));
     }
 
-
     @RequestMapping(value = "draft/save", method = RequestMethod.POST)
     public String saveDraft(
             @CurrentUser User user,
@@ -262,7 +260,6 @@ public class MessageController extends BaseController<Message, Long> {
         redirectAttributes.addFlashAttribute(Constants.MESSAGE, "保存草稿成功！");
         return redirectToUrl(viewName(MessageState.draft_box + "/list"));
     }
-
 
     @RequestMapping(value = "draft/{m}/send", method = RequestMethod.GET)
     public String showResendDraftForm(@PathVariable("m") Message m, Model model) {
@@ -326,7 +323,6 @@ public class MessageController extends BaseController<Message, Long> {
         return redirectToUrl(viewName(MessageState.trash_box + "/list"));
     }
 
-
     @RequestMapping("clear/{state}")
     public String clear(
             @CurrentUser User user,
@@ -353,13 +349,10 @@ public class MessageController extends BaseController<Message, Long> {
 
     }
 
-
     @RequestMapping(value = "/unreadCount")
     @ResponseBody
     public String unreadCount(@CurrentUser User user) {
         return String.valueOf(messageApi.countUnread(user.getId()));
     }
-
-
 
 }

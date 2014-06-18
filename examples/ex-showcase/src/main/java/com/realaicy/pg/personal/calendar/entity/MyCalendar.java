@@ -9,13 +9,21 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-11-4
- * <p>Version: 1.0
+ * 表：个人日历
+ * <p/>
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "personal_calendar")
-public class Calendar extends BaseEntity<Long> {
+public class MyCalendar extends BaseEntity<Long> {
 
     /**
      * 所属人
@@ -70,7 +78,6 @@ public class Calendar extends BaseEntity<Long> {
     @Column(name = "text_color")
     private String textColor;
 
-
     public Long getUserId() {
         return userId;
     }
@@ -104,6 +111,7 @@ public class Calendar extends BaseEntity<Long> {
     }
 
     public Date getEndDate() {
+
         return DateUtils.addDays(startDate, length - 1);
     }
 

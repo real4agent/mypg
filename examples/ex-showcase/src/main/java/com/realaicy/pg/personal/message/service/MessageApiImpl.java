@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.personal.message.service;
 
 import com.google.common.collect.Lists;
@@ -35,9 +30,15 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-22 下午2:52
- * <p>Version: 1.0
+ * 消息服务具体实现类
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Service
 public class MessageApiImpl implements MessageApi {
@@ -84,7 +85,6 @@ public class MessageApiImpl implements MessageApi {
 
                 searchable.or(and1, and2);
         }
-
 
         return messageService.findAll(searchable);
     }
@@ -161,7 +161,6 @@ public class MessageApiImpl implements MessageApi {
         }
 
         messageService.save(message);
-
 
         pushApi.pushUnreadMessage(message.getReceiverId(), countUnread(message.getReceiverId()));
 
@@ -266,28 +265,6 @@ public class MessageApiImpl implements MessageApi {
         }
     }
 
-
-    /**
-     * 变更状态
-     * 根据用户id是收件人/发件人 决定更改哪个状态
-     *
-     * @param userId
-     * @param messageId
-     * @param state
-     */
-    private void changeState(Long userId, Long messageId, MessageState state) {
-        Message message = messageService.findOne(messageId);
-        if (message == null) {
-            return;
-        }
-        if (userId.equals(message.getSenderId())) {
-            changeSenderState(message, state);
-        } else {
-            changeReceiverState(message, state);
-        }
-        messageService.update(message);
-    }
-
     @Override
     public void clearBox(Long userId, MessageState state) {
         switch (state) {
@@ -337,23 +314,6 @@ public class MessageApiImpl implements MessageApi {
         clearBox(userId, MessageState.trash_box);
     }
 
-    private void clearBox(Long userId, MessageState oldState, MessageState newState) {
-        if (oldState == MessageState.draft_box
-                || oldState == MessageState.out_box
-                || oldState == MessageState.store_box
-                || oldState == MessageState.trash_box) {
-
-            messageService.changeSenderState(userId, oldState, newState);
-        }
-
-        if (oldState == MessageState.in_box
-                || oldState == MessageState.store_box
-                || oldState == MessageState.trash_box) {
-            messageService.changeReceiverState(userId, oldState, newState);
-        }
-
-    }
-
     @Override
     public Long countUnread(Long userId) {
         return messageService.countUnread(userId);
@@ -380,6 +340,44 @@ public class MessageApiImpl implements MessageApi {
     @Override
     public void markRead(final Long userId, final Long[] ids) {
         messageService.markRead(userId, ids);
+    }
+
+    /**
+     * 变更状态
+     * 根据用户id是收件人/发件人 决定更改哪个状态
+     *
+     * @param userId
+     * @param messageId
+     * @param state
+     */
+    private void changeState(Long userId, Long messageId, MessageState state) {
+        Message message = messageService.findOne(messageId);
+        if (message == null) {
+            return;
+        }
+        if (userId.equals(message.getSenderId())) {
+            changeSenderState(message, state);
+        } else {
+            changeReceiverState(message, state);
+        }
+        messageService.update(message);
+    }
+
+    private void clearBox(Long userId, MessageState oldState, MessageState newState) {
+        if (oldState == MessageState.draft_box
+                || oldState == MessageState.out_box
+                || oldState == MessageState.store_box
+                || oldState == MessageState.trash_box) {
+
+            messageService.changeSenderState(userId, oldState, newState);
+        }
+
+        if (oldState == MessageState.in_box
+                || oldState == MessageState.store_box
+                || oldState == MessageState.trash_box) {
+            messageService.changeReceiverState(userId, oldState, newState);
+        }
+
     }
 
     private void changeSenderState(Message message, MessageState state) {

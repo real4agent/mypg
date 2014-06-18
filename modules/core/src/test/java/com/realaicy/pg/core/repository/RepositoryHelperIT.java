@@ -128,6 +128,7 @@ public class RepositoryHelperIT extends BaseUserIT {
 
         String ql = "select o from User o";
 
+        //noinspection NullArgumentToVariableArgMethod
         Assert.assertEquals(4, repositoryHelper.findAll(ql, null).size());
 
         List<User> list = repositoryHelper.findAll(ql, new PageRequest(0, 2));

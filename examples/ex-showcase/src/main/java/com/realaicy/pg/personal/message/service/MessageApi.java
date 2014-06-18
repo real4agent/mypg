@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.personal.message.service;
 
 import com.realaicy.pg.personal.message.entity.Message;
@@ -13,9 +8,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-22 下午2:52
- * <p>Version: 1.0
+ * SPI: 消息
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 public interface MessageApi {
     public static final String REPLY_PREFIX = "回复：";
@@ -171,7 +172,6 @@ public interface MessageApi {
      */
     public Long countUnread(Long userId);
 
-
     /**
      * 标识为已读
      *
@@ -185,7 +185,6 @@ public interface MessageApi {
      * @param message
      */
     public void markReplied(Message message);
-
 
     void markRead(Long userId, Long[] ids);
 }

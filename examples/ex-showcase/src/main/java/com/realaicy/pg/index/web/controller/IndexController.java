@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -51,9 +50,18 @@ public class IndexController {
 
         //首先加载用户的系统菜单，user对象是在SysUserFilter过滤器中存入的
         List<Menu> menus = resourceService.findMenus(user);
-        //noinspection SuspiciousToArrayCall
-        log.debug("user=={} \t userPermissions==\t{}", user.getUsername(),
-                Arrays.toString(menus.toArray(new String[menus.size()])));
+        log.debug("user=={}", user.getUsername());
+        if (log.isDebugEnabled()) {
+            StringBuilder strBuilder = new StringBuilder();
+            for (Menu aMenu : menus) {
+                strBuilder.append("(").append(aMenu.getName()).append(")").append("||");
+            }
+            log.debug("menu=={}", strBuilder.toString());
+
+        }
+//        //noinspection SuspiciousToArrayCall
+//        log.debug("user=={} \t userPermissions==\t{}", user.getUsername(),
+//                Arrays.toString(menus.toArray(new String[menus.size()])));
 
         model.addAttribute("menus", menus);
 

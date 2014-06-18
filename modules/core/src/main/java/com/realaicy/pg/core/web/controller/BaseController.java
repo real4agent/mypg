@@ -3,7 +3,7 @@ package com.realaicy.pg.core.web.controller;
 import com.realaicy.pg.core.entity.AbstractEntity;
 import com.realaicy.pg.core.inject.support.InjectBaseDependencyHelper;
 import com.realaicy.pg.core.service.BaseService;
-import com.realaicy.pg.core.utils.ReflectUtils;
+import com.realaicy.pg.core.utils.ReflectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.ui.Model;
@@ -41,7 +41,7 @@ public abstract class BaseController<M extends AbstractEntity, ID extends Serial
      * 接着设置视图的默认前缀
      */
     protected BaseController() {
-        this.entityClass = ReflectUtils.findParameterizedType(getClass(), 0);
+        this.entityClass = ReflectionUtils.findParameterizedType(getClass(), 0);
         setViewPrefix(defaultViewPrefix());
     }
 

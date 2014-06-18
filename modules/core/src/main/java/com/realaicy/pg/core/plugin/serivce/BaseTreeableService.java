@@ -11,7 +11,7 @@ import com.realaicy.pg.core.entity.search.filter.SearchFilterHelper;
 import com.realaicy.pg.core.plugin.entity.Treeable;
 import com.realaicy.pg.core.repository.RepositoryHelper;
 import com.realaicy.pg.core.service.BaseService;
-import com.realaicy.pg.core.utils.ReflectUtils;
+import com.realaicy.pg.core.utils.ReflectionUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -41,7 +41,7 @@ public abstract class BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID
 
     protected BaseTreeableService() {
 
-        Class<M> entityClass = ReflectUtils.findParameterizedType(getClass(), 0);
+        Class<M> entityClass = ReflectionUtils.findParameterizedType(getClass(), 0);
         repositoryHelper = new RepositoryHelper(entityClass);
         String entityName = repositoryHelper.getEntityName(entityClass);
 

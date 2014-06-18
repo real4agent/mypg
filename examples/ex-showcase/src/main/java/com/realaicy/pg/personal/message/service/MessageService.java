@@ -76,8 +76,10 @@ public class MessageService extends BaseService<Message, Long> {
      */
     public Integer changeState(ArrayList<MessageState> oldStates, MessageState newState, int expireDays) {
         Date changeDate = new Date();
-        Integer count = messageRepository.changeSenderState(oldStates, newState, changeDate, DateUtils.addDays(changeDate, -expireDays));
-        count += messageRepository.changeReceiverState(oldStates, newState, changeDate, DateUtils.addDays(changeDate, -expireDays));
+        Integer count = messageRepository.changeSenderState(oldStates, newState, changeDate,
+                DateUtils.addDays(changeDate, -expireDays));
+        count += messageRepository.changeReceiverState(oldStates, newState, changeDate,
+                DateUtils.addDays(changeDate, -expireDays));
         return count;
     }
 

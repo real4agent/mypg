@@ -60,15 +60,15 @@
         </encoder>
     </appender>
 
-    <appender name="shiro" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="temp-sys" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 按天回滚 daily -->
-            <fileNamePattern>${log.dir}/shiro-debug-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${log.dir}/pg-sys-%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- 日志最大的历史 60天 -->
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss} %-5level %logger{0} %M - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{0} %C{0}  %M - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -99,6 +99,9 @@
     </logger>
     <logger name="pg-debug-security" level="debug" additivity="false">
         <appender-ref ref="temptrace"/>
+    </logger>
+    <logger name="pg-debug-sys" level="debug" additivity="false">
+        <appender-ref ref="temp-sys"/>
     </logger>
     <!--<logger name="org.apache.shiro" level="trace" additivity="false">-->
         <!--<appender-ref ref="shiro"/>-->

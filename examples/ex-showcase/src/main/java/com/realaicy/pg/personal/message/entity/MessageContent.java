@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.personal.message.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -15,16 +10,22 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * 消息内容
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-22 下午1:55
- * <p>Version: 1.0
+ * 表：消息内容
+ * <p/>
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "personal_message_content")
 @Proxy(lazy = true, proxyClass = MessageContent.class)
 public class MessageContent extends BaseEntity<Long> {
-
 
     @OneToOne(fetch = FetchType.LAZY)
     private Message message;
@@ -34,7 +35,6 @@ public class MessageContent extends BaseEntity<Long> {
      */
     @Length(min = 5, max = 50000, message = "{length.not.valid}")
     private String content;
-
 
     public Message getMessage() {
         return message;
