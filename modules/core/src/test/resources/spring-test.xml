@@ -27,7 +27,7 @@
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
 
-        <property name="persistenceUnitName" value="jpa.es.common.test"/>
+        <property name="persistenceUnitName" value="jpa.pg.common.test"/>
         <property name="persistenceProvider">
             <bean class="org.hibernate.ejb.HibernatePersistence"/>
         </property>

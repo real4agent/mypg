@@ -1,13 +1,13 @@
 package com.realaicy.pg.core.beanvalidator;
 
-import com.realaicy.pg.core.test.spring.SpringContextTestCase;
+import com.realaicy.pg.core.test.spring.SpringContextNGTestCase;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -17,11 +17,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 @ContextConfiguration(locations = {"/applicationContext-core-test.xml"})
-public class BeanValidatorsNGTest extends SpringContextTestCase {
+public class BeanValidatorsNGTest extends SpringContextNGTestCase {
 
     @Autowired
     Validator validator;

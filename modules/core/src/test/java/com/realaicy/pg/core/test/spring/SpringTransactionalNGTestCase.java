@@ -1,10 +1,7 @@
 package com.realaicy.pg.core.test.spring;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-
-import javax.sql.DataSource;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 
 /**
  * Spring的支持数据库访问, 事务控制和依赖注入的JUnit4 集成测试基类.
@@ -24,14 +21,14 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @ActiveProfiles(Profiles.UNIT_TEST)
-public abstract class SpringTransactionalTestCase extends AbstractTransactionalJUnit4SpringContextTests {
+public abstract class SpringTransactionalNGTestCase extends AbstractTransactionalTestNGSpringContextTests {
 
-    protected DataSource dataSource;
-
-    @Override
-    @Autowired
-    public void setDataSource(DataSource dataSource) {
-        super.setDataSource(dataSource);
-        this.dataSource = dataSource;
-    }
+//    protected DataSource dataSource;
+//
+//    @Override
+//    @Autowired
+//    public void setDataSource(DataSource dataSource) {
+//        super.setDataSource(dataSource);
+//        this.dataSource = dataSource;
+//    }
 }

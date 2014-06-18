@@ -6,13 +6,13 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.fail;
 
 /**
  * 演示基于JAXB2.0的Java对象-XML转换及Dom4j的使用.
@@ -30,7 +30,43 @@ import static org.junit.Assert.fail;
  * </user>
  * </pre>
  */
-public class JaxbMapperTest {
+public class JaxbMapperNGTest {
+
+    /**
+     * 使用Dom4j生成测试用的XML文档字符串.
+     */
+    private static String generateXmlByDom4j() {
+        Document document = DocumentHelper.createDocument();
+
+        Element root = document.addElement("user").addAttribute("id", "1");
+
+        root.addElement("name").setText("calvin");
+
+        // List<String>
+        Element interests = root.addElement("interests");
+        interests.addElement("interest").addText("movie");
+        interests.addElement("interest").addText("sports");
+
+        return document.asXML();
+    }
+
+    /**
+     * 使用Dom4j验证Jaxb所生成XML的正确性.
+     */
+    private static void assertXmlByDom4j(String xml) {
+        Document doc = null;
+        try {
+            doc = DocumentHelper.parseText(xml);
+        } catch (DocumentException e) {
+            fail(e.getMessage());
+        }
+        Element user = doc.getRootElement();
+        assertEquals("1", user.attribute("id").getValue());
+
+        Element interests = (Element) doc.selectSingleNode("//interests");
+        assertEquals(2, interests.elements().size());
+        assertEquals("movie", ((Element) interests.elements().get(0)).getText());
+    }
 
     @Test
     public void objectToXml() {
@@ -75,42 +111,6 @@ public class JaxbMapperTest {
 
         String xml = JaxbMapper.toXml(userList, "userList", User.class, "UTF-8");
         System.out.println("Jaxb Object List to Xml result:\n" + xml);
-    }
-
-    /**
-     * 使用Dom4j生成测试用的XML文档字符串.
-     */
-    private static String generateXmlByDom4j() {
-        Document document = DocumentHelper.createDocument();
-
-        Element root = document.addElement("user").addAttribute("id", "1");
-
-        root.addElement("name").setText("calvin");
-
-        // List<String>
-        Element interests = root.addElement("interests");
-        interests.addElement("interest").addText("movie");
-        interests.addElement("interest").addText("sports");
-
-        return document.asXML();
-    }
-
-    /**
-     * 使用Dom4j验证Jaxb所生成XML的正确性.
-     */
-    private static void assertXmlByDom4j(String xml) {
-        Document doc = null;
-        try {
-            doc = DocumentHelper.parseText(xml);
-        } catch (DocumentException e) {
-            fail(e.getMessage());
-        }
-        Element user = doc.getRootElement();
-        assertEquals("1", user.attribute("id").getValue());
-
-        Element interests = (Element) doc.selectSingleNode("//interests");
-        assertEquals(2, interests.elements().size());
-        assertEquals("movie", ((Element) interests.elements().get(0)).getText());
     }
 
     @XmlRootElement

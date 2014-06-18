@@ -284,6 +284,22 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.powermock</groupId>
+                    <artifactId>powermock-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.powermock</groupId>
+                    <artifactId>powermock-reflect</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>${powermock.version}</version>
             <scope>test</scope>
@@ -471,8 +487,8 @@
             <version>${dozer.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -778,6 +794,7 @@
             </exclusions>
         </dependency>
 
+        <!-- XML begin -->
         <!--dom4j-->
         <dependency>
             <groupId>dom4j</groupId>
@@ -790,6 +807,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- 重新定义Java XPath Engine到最新版，避免旧版那些不必要的依赖 -->
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.1.6</version>
+        </dependency>
+        <!-- XML end -->
+
 
         <!-- 时间相关 -->
         <!--日期美化-->

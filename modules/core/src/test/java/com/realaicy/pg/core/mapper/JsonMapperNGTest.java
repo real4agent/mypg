@@ -3,28 +3,28 @@ package com.realaicy.pg.core.mapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNull;
 
 /**
  * 测试Jackson对Object,Map,List,数组,枚举,日期类等的持久化.
  * 更多测试见showcase中的JsonDemo.
  */
-public class JsonMapperTest {
+@Test
+public class JsonMapperNGTest {
 
     private static JsonMapper binder = JsonMapper.nonDefaultMapper();
 
     /**
      * 序列化对象/集合到Json字符串.
      */
-    @Test
     public void toJson() throws Exception {
         // Bean
         TestBean bean = new TestBean("A");
@@ -63,7 +63,6 @@ public class JsonMapperTest {
      * 从Json字符串反序列化对象/集合.
      */
     @SuppressWarnings("unchecked")
-    @Test
     public void fromJson() throws Exception {
         // Bean
         String beanString = "{\"name\":\"A\"}";
@@ -99,7 +98,6 @@ public class JsonMapperTest {
     /**
      * 测试传入空对象,空字符串,Empty的集合,"null"字符串的结果.
      */
-    @Test
     public void nullAndEmpty() {
         // toJson测试 //
 
@@ -136,7 +134,6 @@ public class JsonMapperTest {
     /**
      * 测试三种不同的Binder.
      */
-    @Test
     public void threeTypeBinders() {
         // 打印全部属性
         JsonMapper normalBinder = new JsonMapper();
