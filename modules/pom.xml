@@ -15,6 +15,7 @@
         <module>core</module>
         <module>parent</module>
         <module>study</module>
+        <module>extension</module>
     </modules>
 
 </project>

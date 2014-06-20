@@ -47,7 +47,7 @@
         </encoder>
     </appender>
 
-    <!-- pangoo appender  -->
+    <!-- pg appender  -->
     <appender name="temptrace" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 按天回滚 daily -->

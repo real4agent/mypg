@@ -1,5 +1,16 @@
 package com.realaicy.pg.jackson;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
+import com.realaicy.pg.core.entity.*;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author realaicy
  * @version 1.1
@@ -11,7 +22,7 @@ package com.realaicy.pg.jackson;
  */
 public class JsonTypeTest {
 
-    /*@Test
+    @Test(enabled = false)
     public void test() throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -60,5 +71,4 @@ public class JsonTypeTest {
         Assert.assertEquals(value1.getBaseInfo().getSex(), actualValue1.getBaseInfo().getSex());
 
     }
-*/
 }

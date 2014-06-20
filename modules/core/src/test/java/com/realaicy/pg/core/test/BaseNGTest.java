@@ -2,7 +2,6 @@ package com.realaicy.pg.core.test;
 
 import com.realaicy.pg.core.test.spring.SpringContextNGTestCase;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 
 /**
  * 测试基类
@@ -16,7 +15,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
  * @since 1.1
  */
 @ContextConfiguration({"classpath:spring-common.xml", "classpath:spring-test.xml"})
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public abstract class BaseNGTest extends SpringContextNGTestCase {
 
 }
