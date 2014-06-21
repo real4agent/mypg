@@ -32,243 +32,1012 @@
                 <filtering>false</filtering>
             </testResource>
         </testResources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.4</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <warName>${project.artifactId}</warName>
-                </configuration>
-            </plugin>
+        <pluginManagement>
 
-            <!-- 单元测试 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.13</version>
-                <configuration>
-                    <argLine>-Xmx128M</argLine>
-                    <includes>
-                        <include>**/*Test*.java</include>
-                        <include>**/*Test.java</include>
-                        <include>**/*IT.java</include>
-                        <include>**/*TestCase.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
+            <plugins>
 
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <locales>zh_CN</locales>
-                    <outputDirectory>${site.basedir}/target/site/${project.artifactId}</outputDirectory>
-                    <outputEncoding>UTF-8</outputEncoding>
-                    <inputEncoding>UTF-8</inputEncoding>
-                    <reportPlugins>
-                        <!-- 单元测试 -->
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <version>2.13</version>
+                <!-- jetty -->
+                <plugin>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>${jetty.version}</version>
+                    <configuration>
+                        <reload>manual</reload>
+                        <!--<scanIntervalSeconds>2</scanIntervalSeconds>-->
+                        <stopPort>9999</stopPort>
+                        <webAppConfig>
+                            <contextPath>/${project.build.finalName}</contextPath>
+                        </webAppConfig>
+                        <connectors>
+                            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                                <port>9080</port>
+                                <!--<maxIdleTime>60000</maxIdleTime>-->
+                            </connector>
+                        </connectors>
+                        <!-- spring profile  -->
+                        <systemProperties>
+                            <systemProperty>
+                                <name>spring.profiles.active</name>
+                                <value>development</value>
+                            </systemProperty>
+                        </systemProperties>
+                    </configuration>
+                </plugin>
+
+                <!-- tomcat7-->
+                <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>${tomcat.maven.version}</version>
+                    <configuration>
+                        <port>9080</port>
+                        <path>/${project.build.finalName}</path>
+                        <!-- spring profile  -->
+                        <systemProperties>
+                            <systemProperty>
+                                <name>spring.profiles.active</name>
+                                <value>development</value>
+                            </systemProperty>
+                        </systemProperties>
+                    </configuration>
+
+                </plugin>
+
+                <!-- native2ascii -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>native2ascii-maven-plugin</artifactId>
+                    <version>1.0-alpha-1</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>native2ascii</goal>
+                            </goals>
                             <configuration>
-                                <argLine>-Xmx128M</argLine>
-                                <includes>
-                                    <include>**/*Test*.java</include>
-                                    <include>**/*Test.java</include>
-                                    <include>**/*IT.java</include>
-                                    <include>**/*TestCase.java</include>
-                                </includes>
+                                <encoding>UTF-8</encoding>
+                                <src>src/main/messages</src>
+                                <dest>target/${project.artifactId}/WEB-INF/classes</dest>
+                                <includes>**/*.*</includes>
                             </configuration>
-                        </plugin>
-                        <!-- checkstyle 代码规范检查 -->
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-checkstyle-plugin</artifactId>
-                            <version>2.9.1</version>
-                            <configuration>
-                                <configLocation>${support.basedir}/checkstyle_checks.xml</configLocation>
-                                <suppressionsLocation>${support.basedir}/checkstyle-suppressions.xml
-                                </suppressionsLocation>
-                                <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-jxr-plugin</artifactId>
-                            <version>2.3</version>
-                            <configuration>
-                                <aggregate>true</aggregate>
-                            </configuration>
-                        </plugin>
-                        <!-- findbugs 静态分析工具 -->
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>findbugs-maven-plugin</artifactId>
-                            <version>2.5.2</version>
-                            <configuration>
-                                <xmlOutput>true</xmlOutput>
-                            </configuration>
-                        </plugin>
-                        <!-- pmd Java程序代码检查工具 -->
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-pmd-plugin</artifactId>
-                            <version>2.7.1</version>
-                        </plugin>
-                        <!-- cobertura 代码覆盖率工具 -->
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>cobertura-maven-plugin</artifactId>
-                            <version>2.5.2</version>
-                            <configuration>
-                                <check>
-                                    <branchRate>85</branchRate>
-                                    <lineRate>85</lineRate>
-                                    <haltOnFailure>true</haltOnFailure>
-                                    <totalBranchRate>85</totalBranchRate>
-                                    <totalLineRate>85</totalLineRate>
-                                    <packageLineRate>85</packageLineRate>
-                                    <packageBranchRate>85</packageBranchRate>
-                                    <regexes>
-                                        <regex>
-                                            <pattern>todo.*</pattern>
-                                            <branchRate>90</branchRate>
-                                            <lineRate>80</lineRate>
-                                        </regex>
-                                    </regexes>
-                                </check>
-                                <instrumentation>
-                                    <ignores>
-                                        <ignore>todo.*</ignore>
-                                    </ignores>
-                                    <excludes>
-                                        <exclude>todo//**/*.class</exclude>
-                                    </excludes>
-                                </instrumentation>
-                            </configuration>
-                        </plugin>
+                        </execution>
+                    </executions>
+                    <!-- native2ascii 使用的tools.jar -->
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.sun</groupId>
+                            <artifactId>tools</artifactId>
+                            <version>1.7.0</version>
+                            <scope>system</scope>
+                            <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <!-- maven-db-plugin -->
+                <plugin>
+                    <groupId>com.googlecode</groupId>
+                    <artifactId>maven-db-plugin</artifactId>
+                    <version>${mvn.plugin.db.version}</version>
+                    <configuration>
+                        <adminDbConnectionSettings>
+                            <jdbcDriver>${connection.driver_class}</jdbcDriver>
+                            <jdbcUrl>${connection.admin.url}</jdbcUrl>
+                            <userName>${connection.username}</userName>
+                            <password>${connection.password}</password>
+                        </adminDbConnectionSettings>
+                        <appDbConnectionSettings>
+                            <jdbcDriver>${connection.driver_class}</jdbcDriver>
+                            <jdbcUrl>${connection.url}</jdbcUrl>
+                            <userName>${connection.username}</userName>
+                            <password>${connection.password}</password>
+                        </appDbConnectionSettings>
+                        <dbDataScriptsDirectory>
+                            <param>src/main/sql/data</param>
+                        </dbDataScriptsDirectory>
+                        <dbSchemaScriptsDirectory>
+                            <param>src/main/sql/schema</param>
+                        </dbSchemaScriptsDirectory>
+                        <dbUpdateScriptsDirectory>
+                            <param>src/main/sql/update</param>
+                        </dbUpdateScriptsDirectory>
+                        <dbCreateStatements>
+                            create database ${db.name} CHARACTER SET 'utf8';
+                        </dbCreateStatements>
+                        <dbDropStatements>drop database ${db.name};</dbDropStatements>
+                        <sqlDelimiter>;;</sqlDelimiter>
+                        <scriptEncoding>UTF-8</scriptEncoding>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>${mysql.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
 
-                        <!-- taglist报表 生成标注上@todo或TODO的项目的列表 -->
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>taglist-maven-plugin</artifactId>
-                            <version>2.4</version>
-                        </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>sql-maven-plugin</artifactId>
+                    <version>${mvn.plugin.sql.version}</version>
 
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>2.7</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-project-info-reports-plugin</artifactId>
-                            <version>2.1</version>
-                        </plugin>
-                    </reportPlugins>
-                    <port>9999</port>
-                </configuration>
-            </plugin>
+                    <dependencies>
+                        <!-- specify the dependent jdbc driver here -->
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>${mysql.version}</version>
+                        </dependency>
+                    </dependencies>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.0-beta-1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>${jdk.version}</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+                    <!-- common configuration shared by all executions -->
+                    <configuration>
+                        <driver>${connection.driver_class}</driver>
+                        <url>${connection.url}</url>
+                        <username>${connection.username}</username>
+                        <password>${connection.password}</password>
+                        <!-- You can comment out username/password configurations and
+                             have maven to look them up in your settings.xml using ${settingsKey}
+                        -->
+                        <settingsKey>sensibleKey</settingsKey>
+                        <!--all executions are ignored if -Dmaven.test.skip=true-->
+                        <!--suppress MavenModelInspection -->
+                        <skip>${maven.test.skip}</skip>
+                    </configuration>
+
+                    <executions>
+                        <execution>
+                            <id>drop-db-before-test-if-any</id>
+                            <phase>process-test-resources</phase>
+                            <goals>
+                                <goal>execute</goal>
+                            </goals>
+                            <configuration>
+                                <!--&lt;!&ndash; need another database to drop the targeted one &ndash;&gt;-->
+                                <!--<url>jdbc:postgressql://localhost:5432:bootstrapdb</url>-->
+                                <autocommit>true</autocommit>
+                                <sqlCommand>drop database yourdb</sqlCommand>
+                                <!-- ignore error when database is not avaiable -->
+                                <onError>continue</onError>
+                            </configuration>
+                        </execution>
+
+                        <execution>
+                            <id>create-db</id>
+                            <phase>process-test-resources</phase>
+                            <goals>
+                                <goal>execute</goal>
+                            </goals>
+                            <configuration>
+                                <!--<url>jdbc:postgressql://localhost:5432:yourdb</url>-->
+                                <!-- no transaction -->
+                                <autocommit>true</autocommit>
+                                <sqlCommand>create database yourdb</sqlCommand>
+                            </configuration>
+                        </execution>
+
+                        <execution>
+                            <id>create-schema</id>
+                            <phase>process-test-resources</phase>
+                            <goals>
+                                <goal>execute</goal>
+                            </goals>
+                            <configuration>
+                                <autocommit>true</autocommit>
+                                <srcFiles>
+                                    <srcFile>src/main/sql/your-schema.sql</srcFile>
+                                </srcFiles>
+                            </configuration>
+                        </execution>
+
+                        <execution>
+                            <id>create-data</id>
+                            <phase>process-test-resources</phase>
+                            <goals>
+                                <goal>execute</goal>
+                            </goals>
+                            <configuration>
+                                <orderFile>ascending</orderFile>
+                                <fileset>
+                                    <basedir>${basedir}</basedir>
+                                    <includes>
+                                        <include>src/test/sql/test-data2.sql</include>
+                                        <include>src/test/sql/test-data1.sql</include>
+                                    </includes>
+                                </fileset>
+                            </configuration>
+                        </execution>
+
+                        <!-- drop db after test -->
+                        <execution>
+                            <id>drop-db-after-test</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>execute</goal>
+                            </goals>
+                            <configuration>
+                                <autocommit>true</autocommit>
+                                <sqlCommand>drop database yourdb</sqlCommand>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+
+                <!-- clean 打包相关插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${mvn.plugin.clean.version}</version>
+                </plugin>
+
+                <!-- source 打包相关插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${mvn.plugin.source.version}</version>
+                </plugin>
+
+                <!-- compiler 打包相关插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${mvn.plugin.compiler.version}</version>
+                    <configuration>
+                        <source>${jdk.version}</source>
+                        <target>${jdk.version}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- install 打包相关插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${mvn.plugin.install.version}</version>
+                </plugin>
+
+                <!-- jar 打包相关插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${mvn.plugin.jar.version}</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+
+                <!-- war打包相关插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${mvn.plugin.war.version}</version>
+                    <configuration>
+                        <warName>${project.artifactId}</warName>
+                    </configuration>
+                </plugin>
+
+                <!-- 单元测试 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${mvn.plugin.surefire.version}</version>
+                    <configuration>
+                        <argLine>-Xmx256M</argLine>
+                        <!--<groups>com.realaicy.pg.core.test.category.Smoke</groups>-->
+                        <!--<suiteXmlFiles>-->
+                        <!--<suiteXmlFile>testng.xml</suiteXmlFile>-->
+                        <!--</suiteXmlFiles>-->
+                        <!--<includes>-->
+                        <!--<include>**/*Test*.java</include>-->
+                        <!--<include>**/*Test.java</include>-->
+                        <!--<include>**/*IT.java</include>-->
+                        <!--<include>**/*TestCase.java</include>-->
+                        <!--</includes>-->
+                    </configuration>
+                </plugin>
+
+                <!-- maven-site-plugin -->
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${mvn.plugin.site.version}</version>
+                    <configuration>
+                        <locales>zh_CN</locales>
+                        <outputDirectory>${site.basedir}/target/site/${project.artifactId}</outputDirectory>
+                        <outputEncoding>UTF-8</outputEncoding>
+                        <inputEncoding>UTF-8</inputEncoding>
+                        <reportPlugins>
+                            <!-- 单元测试 -->
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>${mvn.plugin.surefire.version}</version>
+                                <configuration>
+                                    <argLine>-Xmx128M</argLine>
+                                    <includes>
+                                        <include>**/*Test*.java</include>
+                                        <include>**/*Test.java</include>
+                                        <include>**/*IT.java</include>
+                                        <include>**/*TestCase.java</include>
+                                    </includes>
+                                </configuration>
+                            </plugin>
+                            <!-- checkstyle 代码规范检查 -->
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-checkstyle-plugin</artifactId>
+                                <version>2.9.1</version>
+                                <configuration>
+                                    <configLocation>${support.basedir}/checkstyle_checks.xml</configLocation>
+                                    <suppressionsLocation>${support.basedir}/checkstyle-suppressions.xml
+                                    </suppressionsLocation>
+                                    <suppressionsFileExpression>checkstyle.suppressions.file
+                                    </suppressionsFileExpression>
+                                </configuration>
+                            </plugin>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-jxr-plugin</artifactId>
+                                <version>2.3</version>
+                                <configuration>
+                                    <aggregate>true</aggregate>
+                                </configuration>
+                            </plugin>
+                            <!-- findbugs 静态分析工具 -->
+                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>findbugs-maven-plugin</artifactId>
+                                <version>2.5.2</version>
+                                <configuration>
+                                    <xmlOutput>true</xmlOutput>
+                                </configuration>
+                            </plugin>
+                            <!-- pmd Java程序代码检查工具 -->
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-pmd-plugin</artifactId>
+                                <version>2.7.1</version>
+                            </plugin>
+                            <!-- cobertura 代码覆盖率工具 -->
+                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>cobertura-maven-plugin</artifactId>
+                                <version>2.5.2</version>
+                                <configuration>
+                                    <check>
+                                        <branchRate>85</branchRate>
+                                        <lineRate>85</lineRate>
+                                        <haltOnFailure>true</haltOnFailure>
+                                        <totalBranchRate>85</totalBranchRate>
+                                        <totalLineRate>85</totalLineRate>
+                                        <packageLineRate>85</packageLineRate>
+                                        <packageBranchRate>85</packageBranchRate>
+                                        <regexes>
+                                            <regex>
+                                                <pattern>todo.*</pattern>
+                                                <branchRate>90</branchRate>
+                                                <lineRate>80</lineRate>
+                                            </regex>
+                                        </regexes>
+                                    </check>
+                                    <instrumentation>
+                                        <ignores>
+                                            <ignore>todo.*</ignore>
+                                        </ignores>
+                                        <excludes>
+                                            <exclude>todo//**/*.class</exclude>
+                                        </excludes>
+                                    </instrumentation>
+                                </configuration>
+                            </plugin>
+
+                            <!-- taglist报表 生成标注上@todo或TODO的项目的列表 -->
+                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>taglist-maven-plugin</artifactId>
+                                <version>2.4</version>
+                            </plugin>
+
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-javadoc-plugin</artifactId>
+                                <version>2.7</version>
+                            </plugin>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-project-info-reports-plugin</artifactId>
+                                <version>2.1</version>
+                            </plugin>
+                        </reportPlugins>
+                        <port>9999</port>
+                    </configuration>
+                </plugin>
+
+                <!-- maven-enforcer-plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${mvn.plugin.enforcer.version}</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-versions</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireJavaVersion>
+                                        <version>${jdk.version}</version>
+                                    </requireJavaVersion>
+                                    <bannedDependencies>
+                                        <searchTransitive>true</searchTransitive>
+                                        <excludes>
+                                            <exclude>commons-logging</exclude>
+                                            <exclude>aspectj:aspectj*</exclude>
+                                            <exclude>org.springframework</exclude>
+                                        </excludes>
+                                        <includes>
+                                            <include>org.springframework:*:3.2.*</include>
+                                        </includes>
+                                    </bannedDependencies>
+                                </rules>
+
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
     </build>
 
-    <dependencies>
-        <!-- web相关jar包 -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servlet.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>${jsp.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>${standard.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl.version}</version>
-        </dependency>
-    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- 测试相关jar包  start -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-core</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.javassist</groupId>
+                        <artifactId>javassist</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.powermock</groupId>
+                        <artifactId>powermock-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.powermock</groupId>
+                        <artifactId>powermock-reflect</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-testng</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.powermock</groupId>
+                        <artifactId>powermock-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.powermock</groupId>
+                        <artifactId>powermock-reflect</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mockito</groupId>
+                        <artifactId>mockito-all</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.javassist</groupId>
+                        <artifactId>javassist</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.powermock</groupId>
+                        <artifactId>powermock-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- jetty -->
+            <dependency>
+                <groupId>org.eclipse.jetty.aggregate</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>${jetty.test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-jsp</artifactId>
+                <version>${jetty.test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>javax.servlet</artifactId>
+                        <groupId>org.eclipse.jetty.orbit</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- selenium 2.0 -->
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${selenium.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-android-driver</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-iphone-driver</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-htmlunit-driver</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-safari-driver</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-remote-driver</artifactId>
+                <version>${selenium.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>cglib</groupId>
+                        <artifactId>cglib-nodep</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpclient</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- smtp server simulator -->
+            <dependency>
+                <groupId>com.icegreen</groupId>
+                <artifactId>greenmail</artifactId>
+                <version>1.3.1b</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- 测试相关 end -->
+
+            <!-- web相关jar包 -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${servlet.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>jsp-api</artifactId>
+                <version>${jsp.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>taglibs</groupId>
+                <artifactId>standard</artifactId>
+                <version>${standard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.realaicy.pangoo</groupId>
+                <artifactId>pangoo-core</artifactId>
+                <version>${pangoo.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.yahoo.platform.yui</groupId>
+                <artifactId>yuicompressor</artifactId>
+                <version>${yui.compressor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+
+    <profiles>
+
+        <!-- development -->
+        <profile>
+            <id>development</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.name>pangoo3</db.name>
+                <connection.driver_class>com.mysql.jdbc.Driver</connection.driver_class>
+                <connection.admin.url>
+                    <![CDATA[jdbc:mysql://localhost:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.admin.url>
+                <connection.url>
+                    <![CDATA[jdbc:mysql://localhost:3306/${db.name}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.url>
+                <connection.username>root</connection.username>
+                <connection.password>woaicy</connection.password>
+                <jpa.showSql>true</jpa.showSql>
+                <jpa.generateDdl>false</jpa.generateDdl>
+                <jpa.database>MYSQL</jpa.database>
+                <jpa.databasePlatform>org.hibernate.dialect.MySQL5InnoDBDialect</jpa.databasePlatform>
+                <log.dir>H:/DemoLogs/pg/${project.version}/dev</log.dir>
+
+                <shiro.uid.cookie.domain></shiro.uid.cookie.domain>
+                <shiro.uid.cookie.path>/</shiro.uid.cookie.path>
+
+            </properties>
+        </profile>
+
+        <!-- integration test -->
+        <profile>
+            <id>it</id>
+            <properties>
+                <db.name>pangoo3it</db.name>
+                <connection.driver_class>com.mysql.jdbc.Driver</connection.driver_class>
+                <connection.admin.url>
+                    <![CDATA[jdbc:mysql://localhost:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.admin.url>
+                <connection.url>
+                    <![CDATA[jdbc:mysql://localhost:3306/${db.name}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.url>
+                <connection.username>root</connection.username>
+                <connection.password/>
+                <jpa.showSql>false</jpa.showSql>
+                <jpa.generateDdl>false</jpa.generateDdl>
+                <jpa.database>MYSQL</jpa.database>
+                <jpa.databasePlatform>org.hibernate.dialect.MySQL5InnoDBDialect</jpa.databasePlatform>
+                <log.dir>H:/DemoLogs/pg/${project.version}/it</log.dir>
+
+                <shiro.uid.cookie.domain></shiro.uid.cookie.domain>
+                <shiro.uid.cookie.path>/</shiro.uid.cookie.path>
+
+
+            </properties>
+        </profile>
+
+        <profile>
+            <!--正式环境-->
+            <id>production</id>
+            <properties>
+                <db.name>pangoo3</db.name>
+                <connection.driver_class>com.mysql.jdbc.Driver</connection.driver_class>
+                <connection.admin.url>
+                    <![CDATA[jdbc:mysql://localhost:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.admin.url>
+                <connection.url>
+                    <![CDATA[jdbc:mysql://localhost:3306/${db.name}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.url>
+                <connection.username>root</connection.username>
+                <connection.password/>
+                <jpa.showSql>false</jpa.showSql>
+                <jpa.generateDdl>false</jpa.generateDdl>
+                <jpa.database>MYSQL</jpa.database>
+                <jpa.databasePlatform>org.hibernate.dialect.MySQL5InnoDBDialect</jpa.databasePlatform>
+                <log.dir>/data/backup/pg</log.dir>
+
+                <shiro.uid.cookie.domain></shiro.uid.cookie.domain>
+                <shiro.uid.cookie.path>/</shiro.uid.cookie.path>
+
+            </properties>
+        </profile>
+
+        <profile>
+            <id>functional-test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>-Xmx256M -XX:MaxPermSize=128m</argLine>
+                            <includes>
+                                <include>**/*FT.java</include>
+                            </includes>
+                            <!-- 支持taglib tld文件查找的必要设置 -->
+                            <useSystemClassLoader>false</useSystemClassLoader>
+                            <!-- 将由mvn命令行-Dselenium.driver传到surefire的JVM中 -->
+                            <systemPropertyVariables>
+                                <!--suppress MavenModelInspection -->
+                                <selenium.driver>${selenium.driver}</selenium.driver>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 刷新开发环境数据库 -->
+        <profile>
+            <id>refresh-db</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <configuration>
+
+                            <target>
+                                <property file="src/main/resources/application.development.properties"/>
+                                <property file="src/main/resources/application.properties"/>
+                                <!--suppress MavenModelInspection -->
+                                <sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}"
+                                     password="${jdbc.password}" onerror="continue"
+                                     encoding="${project.build.sourceEncoding}">
+                                    <classpath refid="maven.test.classpath"/>
+                                    <transaction src="src/main/resources/sql/h2/schema.sql"/>
+                                    <transaction src="src/test/resources/sql/data/h2/import-data.sql"/>
+                                </sql>
+                                <!--suppress MavenModelInspection -->
+                                <sql driver="${quartz.jdbc.driver}" url="${quartz.jdbc.url}"
+                                     userid="${quartz.jdbc.username}" password="${quartz.jdbc.password}"
+                                     encoding="${project.build.sourceEncoding}"
+                                     src="src/main/resources/sql/h2/quartz.sql" onerror="continue">
+                                    <classpath refid="maven.test.classpath"/>
+                                </sql>
+                            </target>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--打包可执行war包, 基于Jetty -->
+        <profile>
+            <id>standalone</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>assembly-standalone.xml</descriptor>
+                                    </descriptors>
+                                    <archive>
+                                        <manifest>
+                                            <mainClass>org.springside.examples.showcase.Main</mainClass>
+                                        </manifest>
+                                    </archive>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+        <!--打包可执行war包,基于Tomcat version6 -->
+        <profile>
+            <id>standalone-tomcat6</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat6-maven-plugin</artifactId>
+                        <version>${mvn.plugin.tomcat.version}</version>
+                        <configuration>
+                            <warFile>path/to/my/warFile.war</warFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!--打包可执行war包,基于Tomcat version7 -->
+        <profile>
+            <id>standalone-tomcat7</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <version>${mvn.plugin.tomcat.version}</version>
+                        <executions>
+                            <execution>
+                                <id>tomcat-run</id>
+                                <goals>
+                                    <goal>exec-war-only</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <attachArtifactClassifier>standalone-tomcat7</attachArtifactClassifier>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.6</jdk.version>
+
         <support.basedir>${project.parent.basedir}/src/support</support.basedir>
         <site.basedir>${project.parent.basedir}</site.basedir>
+
+        <pangoo.core.version>0.9.6</pangoo.core.version>
+
+        <poi.version>3.9</poi.version>
+        <spring.version>3.2.8.RELEASE</spring.version>
+
+        <jetty.version>8.1.8.v20121106</jetty.version>
+        <tomcat.maven.version>2.2</tomcat.maven.version>
+        <mysql.version>5.1.27</mysql.version>
+        <yui.compressor.version>2.4.2</yui.compressor.version>
+        <codegen.version>1.0-SNAPSHOT</codegen.version>
+
+        <junit.version>4.11</junit.version>
+        <testng.version>6.8.8</testng.version>
+        <mockito.version>1.9.5</mockito.version>
+        <powermock.version>1.5.5</powermock.version>
+        <h2.version>1.3.170</h2.version>
+        <jetty.version>8.1.8.v20121106</jetty.version>
+        <jetty.test.version>7.6.14.v20131031</jetty.test.version>
+        <selenium.version>2.42.2</selenium.version>
+        <greenmail.version>1.3.1.b</greenmail.version>
 
         <servlet.version>2.5</servlet.version>
         <jsp.version>2.1</jsp.version>
         <jstl.version>1.2</jstl.version>
         <standard.version>1.1.2</standard.version>
+
+
+        <mvn.plugin.clean.version>2.5</mvn.plugin.clean.version>
+        <mvn.plugin.source.version>2.2.1</mvn.plugin.source.version>
+        <mvn.plugin.compiler.version>3.1</mvn.plugin.compiler.version>
+        <mvn.plugin.install.version>2.5.1</mvn.plugin.install.version>
+        <mvn.plugin.jar.version>2.4</mvn.plugin.jar.version>
+        <mvn.plugin.war.version>2.4</mvn.plugin.war.version>
+        <mvn.plugin.surefire.version>2.17</mvn.plugin.surefire.version>
+        <mvn.plugin.enforcer.version>1.3.1</mvn.plugin.enforcer.version>
+        <mvn.plugin.site.version>3.1</mvn.plugin.site.version>
+        <mvn.plugin.sql.version>1.5</mvn.plugin.sql.version>
+        <mvn.plugin.db.version>1.4</mvn.plugin.db.version>
+        <mvn.plugin.tomcat.version>2.2</mvn.plugin.tomcat.version>
+
 
     </properties>
 
