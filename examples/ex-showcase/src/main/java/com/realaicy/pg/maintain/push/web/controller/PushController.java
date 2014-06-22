@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.push.web.controller;
 
 import com.google.common.collect.Maps;
@@ -21,10 +16,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 1、实时推送用户：消息和通知
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-16 下午2:08
- * <p>Version: 1.0
+ * SD-JPA-Controller：推送
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 public class PushController {
@@ -40,7 +41,6 @@ public class PushController {
 
     /**
      * 获取页面的提示信息
-     * @return
      */
     @RequestMapping(value = "/admin/polling")
     @ResponseBody
@@ -50,11 +50,11 @@ public class PushController {
         resp.addHeader("Pragma", "no-cache");
 
         Long userId = user.getId();
-        if(userId == null) {
+        if (userId == null) {
             return null;
         }
         //如果用户第一次来 立即返回
-        if(!pushService.isOnline(userId)) {
+        if (!pushService.isOnline(userId)) {
             Long unreadMessageCount = messageApi.countUnread(userId);
             List<Map<String, Object>> notifications = notificationApi.topFiveNotification(user.getId());
 
@@ -68,7 +68,5 @@ public class PushController {
             return pushService.newDeferredResult(userId);
         }
     }
-
-
 
 }

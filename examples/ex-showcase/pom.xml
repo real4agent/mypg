@@ -106,6 +106,10 @@
             <artifactId>pangoo-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.realaicy.pangoo</groupId>
+            <artifactId>pangoo-extension</artifactId>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>

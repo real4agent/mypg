@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.notification.repository;
 
 import com.realaicy.pg.core.repository.BaseRepository;
@@ -11,9 +6,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-22 下午2:39
- * <p>Version: 1.0
+ * SD-JPA-Repository：通知
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 public interface NotificationDataRepository extends BaseRepository<NotificationData, Long> {
 

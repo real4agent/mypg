@@ -73,7 +73,7 @@ public class UserRepository2ImplIT extends BaseUserIT {
         int count = 15;
         List<Long> ids = Lists.newArrayList();
         List<Date> birthdayList = Lists.newArrayList();
-        String realnamePrefix = "zhang";
+        String realnamePrefix = "liu";
         for (int i = 0; i < count; i++) {
             User user = createUser();
             user.getBaseInfo().setRealname(realnamePrefix + i);
@@ -91,7 +91,7 @@ public class UserRepository2ImplIT extends BaseUserIT {
         int count = 15;
         List<Long> ids = Lists.newArrayList();
         List<Date> birthdayList = Lists.newArrayList();
-        String realnamePrefix = "zhang";
+        String realnamePrefix = "liu";
         for (int i = 0; i < count; i++) {
             User user = createUser();
             user.getBaseInfo().setRealname(realnamePrefix + i);
@@ -108,7 +108,7 @@ public class UserRepository2ImplIT extends BaseUserIT {
     public void testFindOne() {
         int count = 15;
         User lastUser = null;
-        String realnamePrefix = "zhang";
+        String realnamePrefix = "liu";
         for (int i = 0; i < count; i++) {
             User user = createUser();
             user.getBaseInfo().setRealname(realnamePrefix + i);

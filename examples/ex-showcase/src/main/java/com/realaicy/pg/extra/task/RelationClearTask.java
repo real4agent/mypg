@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.extra.task;
 
 import com.realaicy.pg.sys.auth.task.AuthRelationClearTask;
@@ -15,13 +10,17 @@ import org.springframework.stereotype.Service;
 /**
  * 定时清理对象间的关系
  * <p/>
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-13 下午5:09
- * <p>Version: 1.0
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Service("relationClearTask")
 public class RelationClearTask {
-
 
     @Autowired
     private UserClearRelationTask userClearRelationTask;
@@ -42,7 +41,6 @@ public class RelationClearTask {
 
         //分组与组织机构/工作职务的关系
         groupClearRelationTask.clearDeletedGroupRelation();
-
 
         //角色与资源/权限的关系
         roleClearRelationTask.clearDeletedRoleRelation();

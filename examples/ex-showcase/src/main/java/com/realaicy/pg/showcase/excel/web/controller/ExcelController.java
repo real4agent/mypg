@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.excel.web.controller;
 
 import com.realaicy.pg.core.Constants;
@@ -28,9 +23,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-1-28 下午4:29
- * <p>Version: 1.0
+ * SD-JPA-Controller：Excel
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "/showcase/excel")
@@ -60,7 +62,6 @@ public class ExcelController extends BaseCRUDController<ExcelData, Long> {
 
     /**
      * 初始化100w数据
-     * @return
      */
     @RequestMapping("/init")
     public String initOneMillionData(@CurrentUser User user, RedirectAttributes redirectAttributes) {
@@ -83,7 +84,7 @@ public class ExcelController extends BaseCRUDController<ExcelData, Long> {
             Model model,
             RedirectAttributes redirectAttributes) throws IOException {
 
-        if(!canImport(file, model)) {
+        if (!canImport(file, model)) {
             return showImportExcelForm(type, model);
         }
 
@@ -106,22 +107,6 @@ public class ExcelController extends BaseCRUDController<ExcelData, Long> {
         redirectAttributes.addFlashAttribute(Constants.MESSAGE, "导入任务已提交，任务执行完成后会在页面右上角的“我的通知”中通知你");
         return redirectToUrl(null);
     }
-
-    private boolean canImport(final MultipartFile file, final Model model) {
-        if(file == null || file.isEmpty()) {
-            model.addAttribute(Constants.ERROR, "请选择要导入的文件");
-            return false;
-        }
-
-        String filename = file.getOriginalFilename().toLowerCase();
-        if(!(filename.endsWith("csv") || filename.endsWith("xls") || filename.endsWith("xlsx"))) {
-            model.addAttribute(Constants.ERROR, "导入的文件格式错误，允许的格式：csv、xls、xlsx");
-            return false;
-        }
-
-        return true;
-    }
-
 
     @RequestMapping(value = "/export", method = RequestMethod.GET)
     public String exportExcel(
@@ -152,6 +137,21 @@ public class ExcelController extends BaseCRUDController<ExcelData, Long> {
 
         redirectAttributes.addFlashAttribute(Constants.MESSAGE, "导出任务已提交，任务执行完成后会在页面右上角的“我的通知”中通知你");
         return redirectToUrl(null);
+    }
+
+    private boolean canImport(final MultipartFile file, final Model model) {
+        if (file == null || file.isEmpty()) {
+            model.addAttribute(Constants.ERROR, "请选择要导入的文件");
+            return false;
+        }
+
+        String filename = file.getOriginalFilename().toLowerCase();
+        if (!(filename.endsWith("csv") || filename.endsWith("xls") || filename.endsWith("xlsx"))) {
+            model.addAttribute(Constants.ERROR, "导入的文件格式错误，允许的格式：csv、xls、xlsx");
+            return false;
+        }
+
+        return true;
     }
 
 }

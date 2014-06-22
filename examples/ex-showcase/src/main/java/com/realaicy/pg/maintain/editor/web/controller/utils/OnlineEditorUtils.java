@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.editor.web.controller.utils;
 
 import com.google.common.collect.Maps;
@@ -17,9 +12,15 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-6-10 下午12:25
- * <p>Version: 1.0
+ * 在线编辑器辅助类
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 public class OnlineEditorUtils {
 
@@ -32,7 +33,9 @@ public class OnlineEditorUtils {
             return file.isDirectory();
         }
     };
-
+    private static final String[] CAN_EDIT_EXTENSION = new String[]{
+            "js", "css", "html", "htm", "jsp", "jspx", "tld", "tag", "xml", "properties", "txt"
+    };
 
     public static Map<Object, Object> extractFileInfoMap(File currentFile, String rootPath, long id, long parentId)
             throws UnsupportedEncodingException {
@@ -62,17 +65,13 @@ public class OnlineEditorUtils {
         return info;
     }
 
-    private static final String[] CAN_EDIT_EXTENSION = new String[] {
-        "js", "css", "html", "htm", "jsp", "jspx", "tld", "tag", "xml", "properties", "txt"
-    };
-
     private static boolean canEdit(String name) {
         name = name.toLowerCase();
-       for(String extension : CAN_EDIT_EXTENSION) {
-           if(name.endsWith(extension)) {
-               return true;
-           }
-       }
+        for (String extension : CAN_EDIT_EXTENSION) {
+            if (name.endsWith(extension)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -84,7 +83,6 @@ public class OnlineEditorUtils {
         File[] subFiles = file.listFiles(DIRECTORY_FILTER);
         return subFiles != null && subFiles.length > 0;
     }
-
 
     public static void sort(final List<Map<Object, Object>> files, final Sort sort) {
 
@@ -98,12 +96,12 @@ public class OnlineEditorUtils {
                 if (nameOrder != null) {
                     String n1 = (String) o1.get("name");
                     String n2 = (String) o2.get("name");
-                    Boolean n1IsDirecoty = (Boolean)o1.get("isDirectory");
-                    Boolean n2IsDirecoty = (Boolean)o2.get("isDirectory");
+                    Boolean n1IsDirecoty = (Boolean) o1.get("isDirectory");
+                    Boolean n2IsDirecoty = (Boolean) o2.get("isDirectory");
 
-                    if(n1IsDirecoty.equals(Boolean.TRUE) && n2IsDirecoty.equals(Boolean.FALSE)) {
+                    if (n1IsDirecoty.equals(Boolean.TRUE) && n2IsDirecoty.equals(Boolean.FALSE)) {
                         return -1;
-                    } else if(n1IsDirecoty.equals(Boolean.FALSE) && n2IsDirecoty.equals(Boolean.TRUE)) {
+                    } else if (n1IsDirecoty.equals(Boolean.FALSE) && n2IsDirecoty.equals(Boolean.TRUE)) {
                         return 1;
                     }
 
@@ -136,12 +134,10 @@ public class OnlineEditorUtils {
                     }
                 }
 
-
                 return 0;
             }
         });
 
     }
-
 
 }

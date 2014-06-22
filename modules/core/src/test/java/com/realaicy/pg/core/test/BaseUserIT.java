@@ -8,6 +8,7 @@ import java.util.Date;
 
 /**
  * 用户测试基类
+ *
  * @author realaicy
  * @version 1.1
  * @email realaicy@gmail.com
@@ -20,11 +21,11 @@ public abstract class BaseUserIT extends BaseIT {
 
     public User createUser() {
         User user = new User();
-        user.setUsername("zhangkaitao$$$" + System.nanoTime() + RandomStringUtils.random(10));
+        user.setUsername("liuxudong$$$" + System.nanoTime() + RandomStringUtils.random(10));
         user.setPassword("123456");
         user.setRegisterDate(new Date());
         BaseInfo baseInfo = new BaseInfo();
-        baseInfo.setRealname("zhangkaitao");
+        baseInfo.setRealname("liuxudong");
         baseInfo.setSex(Sex.male);
         baseInfo.setBirthday(new Timestamp(System.currentTimeMillis()));
         baseInfo.setAge(15);

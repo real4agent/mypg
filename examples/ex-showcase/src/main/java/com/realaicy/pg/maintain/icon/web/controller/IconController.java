@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.icon.web.controller;
 
 import com.google.common.collect.Lists;
@@ -33,9 +28,16 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-1-28 下午4:29
- * <p>Version: 1.0
+ * SD-JPA-Controller：图标
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "/admin/maintain/icon")
@@ -173,9 +175,6 @@ public class IconController extends BaseCRUDController<Icon, Long> {
 
     /**
      * 如果量大 建议 在页面设置按钮 然后点击生成
-     *
-     * @param request
-     * @return
      */
     @RequestMapping(value = "/genCssFile")
     @ResponseBody
@@ -216,7 +215,7 @@ public class IconController extends BaseCRUDController<Icon, Long> {
                         icon.getLeft(), icon.getTop(),
                         icon.getWidth(), icon.getHeight(),
                         icon.getStyle()));
-                continue;
+                //continue;
             }
 
         }

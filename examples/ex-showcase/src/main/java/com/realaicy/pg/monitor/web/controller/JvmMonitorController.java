@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.monitor.web.controller;
 
 import com.realaicy.pg.core.web.controller.BaseController;
@@ -11,9 +6,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-27 下午6:50
- * <p>Version: 1.0
+ * JVM缓存信息查看
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping("/admin/monitor/jvm")
@@ -24,6 +25,5 @@ public class JvmMonitorController extends BaseController {
     public String index() {
         return viewName("index");
     }
-
 
 }

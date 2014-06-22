@@ -257,7 +257,7 @@ public class SearchableTest {
     public void testConvert() {
 
         Searchable searchable = Searchable.newSearchable();
-        searchable.addSearchParam("username_like", "zhang");
+        searchable.addSearchParam("username_like", "liu");
         searchable.addSearchParam("baseInfo.sex_eq", "male");
         searchable.addSearchParam("id_in", new String[]{"1", "2", "3"});
 

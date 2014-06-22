@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.monitor.web.controller;
 
 import com.google.common.collect.Lists;
@@ -27,9 +22,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-6-8 下午5:17
- * <p>Version: 1.0
+ * Ehcache缓存信息查看
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping("/admin/monitor/ehcache")
@@ -45,6 +46,7 @@ public class EhcacheMonitorController extends BaseController {
         return viewName("index");
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping("{cacheName}/details")
     public String details(
             @PathVariable("cacheName") String cacheName,
@@ -56,8 +58,8 @@ public class EhcacheMonitorController extends BaseController {
 
         List showKeys = Lists.newArrayList();
 
-        for(Object key : allKeys) {
-            if(key.toString().contains(searchText)) {
+        for (Object key : allKeys) {
+            if (key.toString().contains(searchText)) {
                 showKeys.add(key);
             }
         }
@@ -71,12 +73,11 @@ public class EhcacheMonitorController extends BaseController {
     @ResponseBody
     public Object keyDetail(
             @PathVariable("cacheName") String cacheName,
-            @PathVariable("key") String key,
-            Model model
+            @PathVariable("key") String key
+//            ,Model model
     ) {
 
         Element element = cacheManager.getCache(cacheName).get(key);
-
 
         String dataPattern = "yyyy-MM-dd hh:mm:ss";
         Map<String, Object> data = Maps.newHashMap();
@@ -88,7 +89,7 @@ public class EhcacheMonitorController extends BaseController {
         data.put("latestOfCreationAndUpdateTime", DateFormatUtils.format(latestOfCreationAndUpdateTime, dataPattern));
         Date lastAccessTime = new Date(element.getLastAccessTime());
         data.put("lastAccessTime", DateFormatUtils.format(lastAccessTime, dataPattern));
-        if(element.getExpirationTime() == Long.MAX_VALUE) {
+        if (element.getExpirationTime() == Long.MAX_VALUE) {
             data.put("expirationTime", "不过期");
         } else {
             Date expirationTime = new Date(element.getExpirationTime());
@@ -102,7 +103,6 @@ public class EhcacheMonitorController extends BaseController {
         return data;
 
     }
-
 
     @RequestMapping("{cacheName}/{key}/delete")
     @ResponseBody

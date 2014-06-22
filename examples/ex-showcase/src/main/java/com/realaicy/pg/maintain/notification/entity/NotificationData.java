@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.notification.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -12,17 +7,22 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
- * 通知数据
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-8 下午2:15
- * <p>Version: 1.0
+ * 实体：通知数据
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "maintain_notification_data")
 public class NotificationData extends BaseEntity<Long> {
 
     /**
-     *  接收通知的用户
+     * 接收通知的用户
      */
     @NotNull(message = "{not.null}")
     @Column(name = "user_id")

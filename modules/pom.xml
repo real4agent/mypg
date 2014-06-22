@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pangoo-project</artifactId>
         <groupId>com.realaicy.pangoo</groupId>
-        <version>0.9.6</version>
+        <version>0.9.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +16,7 @@
         <module>parent</module>
         <module>study</module>
         <module>extension</module>
+        <module>test</module>
     </modules>
 
 </project>

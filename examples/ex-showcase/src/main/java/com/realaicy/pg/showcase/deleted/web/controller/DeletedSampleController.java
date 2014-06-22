@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.deleted.web.controller;
 
 import com.realaicy.pg.core.entity.enums.BooleanEnum;
@@ -25,9 +20,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Date;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-1-28 下午4:29
- * <p>Version: 1.0
+ * SD-JPA-Controller：样例
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "/showcase/deleted")
@@ -42,47 +44,10 @@ public class DeletedSampleController extends BaseCRUDController<DeletedSample, L
         setResourceIdentity("showcase:deleted");
     }
 
-    @Override
-    protected void setCommonData(Model model) {
-        super.setCommonData(model);
-        model.addAttribute("sexList", Sex.values());
-        model.addAttribute("booleanList", BooleanEnum.values());
-    }
-
-
-    /**
-     * 验证失败返回true
-     *
-     * @param m
-     * @param result
-     * @return
-     */
-    @Override
-    protected boolean hasError(DeletedSample m, BindingResult result) {
-        Assert.notNull(m);
-
-        //字段错误 前台使用<pg:showFieldError commandName="showcase/sample"/> 显示
-        if (m.getBirthday() != null && m.getBirthday().after(new Date())) {
-            //前台字段名（前台使用[name=字段名]取得dom对象） 错误消息键。。
-            result.rejectValue("m.birthday", "birthday.past");
-        }
-
-        //全局错误 前台使用<pg:showGlobalError commandName="showcase/sample"/> 显示
-        if (m.getName().contains("admin")) {
-            result.reject("name.must.not.admin");
-        }
-
-        return result.hasErrors();
-    }
-
     /**
      * 验证返回格式
      * 单个：[fieldId, 1|0, msg]
      * 多个：[[fieldId, 1|0, msg],[fieldId, 1|0, msg]]
-     *
-     * @param fieldId
-     * @param fieldValue
-     * @return
      */
     @RequestMapping(value = "validate", method = RequestMethod.GET)
     @ResponseBody
@@ -103,5 +68,32 @@ public class DeletedSampleController extends BaseCRUDController<DeletedSample, L
         return response.result();
     }
 
+    @Override
+    protected void setCommonData(Model model) {
+        super.setCommonData(model);
+        model.addAttribute("sexList", Sex.values());
+        model.addAttribute("booleanList", BooleanEnum.values());
+    }
+
+    /**
+     * 验证失败返回true
+     */
+    @Override
+    protected boolean hasError(DeletedSample m, BindingResult result) {
+        Assert.notNull(m);
+
+        //字段错误 前台使用<pg:showFieldError commandName="showcase/sample"/> 显示
+        if (m.getBirthday() != null && m.getBirthday().after(new Date())) {
+            //前台字段名（前台使用[name=字段名]取得dom对象） 错误消息键。。
+            result.rejectValue("m.birthday", "birthday.past");
+        }
+
+        //全局错误 前台使用<pg:showGlobalError commandName="showcase/sample"/> 显示
+        if (m.getName().contains("admin")) {
+            result.reject("name.must.not.admin");
+        }
+
+        return result.hasErrors();
+    }
 
 }

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pangoo-parent</artifactId>
         <groupId>com.realaicy.pangoo</groupId>
-        <version>0.9.6</version>
+        <version>0.9.7</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -68,6 +68,14 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.realaicy.pangoo</groupId>
+            <artifactId>pangoo-test</artifactId>
+            <version>0.9.7</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- 测试相关jar包  start -->
         <dependency>
             <groupId>junit</groupId>
@@ -96,10 +104,6 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
         </dependency>
 
         <dependency>
@@ -244,6 +248,10 @@
         <!-- spring相关jar包 -->
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
@@ -261,6 +269,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
         </dependency>
 
         <!-- spring webmvc相关jar包 -->

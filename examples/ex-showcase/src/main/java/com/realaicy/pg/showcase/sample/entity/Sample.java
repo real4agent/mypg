@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.sample.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -15,9 +10,15 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-4 上午9:38
- * <p>Version: 1.0
+ * 实体：样例
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "showcase_sample")
@@ -32,7 +33,6 @@ public class Sample extends BaseEntity<Long> {
     @Max(value = 200, message = "{sample.age.not.valid}")
     @Column(name = "age")
     private Integer age;
-
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "birthday")
@@ -85,6 +85,5 @@ public class Sample extends BaseEntity<Long> {
     public void setShow(Boolean show) {
         this.show = show;
     }
-
 
 }

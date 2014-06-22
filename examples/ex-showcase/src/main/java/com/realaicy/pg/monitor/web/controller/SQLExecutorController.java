@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.monitor.web.controller;
 
 import com.google.common.collect.Lists;
@@ -40,9 +35,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-1 下午2:39
- * <p>Version: 1.0
+ * SQL执行控制器
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping("/admin/monitor/db")
@@ -55,12 +56,10 @@ public class SQLExecutorController extends BaseController {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-
     @RequestMapping(value = "/sql", method = RequestMethod.GET)
     public String showSQLForm() {
         return viewName("sqlForm");
     }
-
 
     @PageableDefaults(pageNumber = 0, value = 10)
     @RequestMapping(value = "/sql", method = RequestMethod.POST)
@@ -75,12 +74,13 @@ public class SQLExecutorController extends BaseController {
         final boolean isDML = lowerCaseSQL.startsWith("insert") || lowerCaseSQL.startsWith("update") || lowerCaseSQL.startsWith("delete");
         final boolean isDQL = lowerCaseSQL.startsWith("select");
 
-        if(!isDML && !isDQL) {
+        if (!isDML && !isDQL) {
             model.addAttribute(Constants.ERROR, "您执行的SQL不允许，只允许insert、update、delete、select");
             return showSQLForm();
         }
         try {
             new TransactionTemplate(transactionManager).execute(new TransactionCallback<Void>() {
+                @SuppressWarnings("unchecked")
                 @Override
                 public Void doInTransaction(TransactionStatus status) {
 
@@ -89,10 +89,9 @@ public class SQLExecutorController extends BaseController {
                         int updateCount = query.executeUpdate();
                         model.addAttribute("updateCount", updateCount);
                     } else {
-                        String findSQL = sql;
-                        String countSQL = "select count(*) count from (" + findSQL + ") o";
+                        String countSQL = "select count(*) count from (" + sql + ") o";
                         Query countQuery = em.createNativeQuery(countSQL);
-                        Query findQuery = em.createNativeQuery(findSQL);
+                        Query findQuery = em.createNativeQuery(sql);
                         findQuery.setFirstResult(pageable.getOffset());
                         findQuery.setMaxResults(pageable.getPageSize());
 
@@ -110,7 +109,7 @@ public class SQLExecutorController extends BaseController {
                                 ResultSetMetaData metaData = psst.getMetaData();
 
                                 List<String> columnNames = Lists.newArrayList();
-                                for(int i = 1, l = metaData.getColumnCount(); i <= l; i++) {
+                                for (int i = 1, l = metaData.getColumnCount(); i <= l; i++) {
                                     columnNames.add(metaData.getColumnLabel(i));
                                 }
                                 psst.close();
@@ -130,8 +129,5 @@ public class SQLExecutorController extends BaseController {
 
         return showSQLForm();
     }
-
-
-
 
 }

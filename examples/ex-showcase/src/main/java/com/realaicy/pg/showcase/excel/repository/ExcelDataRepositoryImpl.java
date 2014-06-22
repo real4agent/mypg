@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.excel.repository;
 
 import org.hibernate.Session;
@@ -14,16 +9,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-2 下午8:27
- * <p>Version: 1.0
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 public class ExcelDataRepositoryImpl {
 
-
     @PersistenceContext
     private EntityManager em;
-
 
     public void truncate() {
         em.unwrap(Session.class).doWork(new Work() {
@@ -32,7 +29,6 @@ public class ExcelDataRepositoryImpl {
                 connection.createStatement().execute("truncate table showcase_excel_data");
             }
         });
-
 
     }
 }

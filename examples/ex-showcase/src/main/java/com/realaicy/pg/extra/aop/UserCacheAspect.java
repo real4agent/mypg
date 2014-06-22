@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.extra.aop;
 
 import com.realaicy.pg.core.cache.BaseCacheAspect;
@@ -16,68 +11,31 @@ import org.springframework.stereotype.Component;
  * 缓存实现
  * 1、username/email/mobilePhoneNumber------>id
  * 2、id------->Model
- * <p>User: Zhang Kaitao
- * <p>Date: 13-3-22 下午9:00
- * <p>Version: 1.0
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Component
 @Aspect
 public class UserCacheAspect extends BaseCacheAspect {
 
+   /* private String idKeyPrefix = "id-";
+    private String usernameKeyPrefix = "username-";
+    private String emailKeyPrefix = "email-";
+    private String mobilePhoneNumberKeyPrefix = "mobilePhoneNumber-";*/
+
     public UserCacheAspect() {
         setCacheName("sys-userCache");
     }
 
-    private String idKeyPrefix = "id-";
-    private String usernameKeyPrefix = "username-";
-    private String emailKeyPrefix = "email-";
-    private String mobilePhoneNumberKeyPrefix = "mobilePhoneNumber-";
-
     ////////////////////////////////////////////////////////////////////////////////
     ////切入点
     ////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * 匹配用户Service
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.user.service.UserService)")
-    private void userServicePointcut() {
-    }
-
-    /**
-     * only put
-     * 如 新增 修改 登录 改密 改状态  只有涉及修改即可
-     */
-    @Pointcut(value =
-            "execution(* save(..)) " +
-                    "|| execution(* saveAndFlush(..)) " +
-                    "|| execution(* update(..)) " +
-                    "|| execution(* login(..)) " +
-                    "|| execution(* changePassword(..)) " +
-                    "|| execution(* changeStatus(..))")
-    private void cachePutPointcut() {
-    }
-
-
-    /**
-     * evict 比如删除
-     */
-    @Pointcut(value = "(execution(* delete(*))) && args(arg)", argNames = "arg")
-    private void cacheEvictPointcut(Object arg) {
-    }
-
-    /**
-     * put 或 get
-     * 比如查询
-     */
-    @Pointcut(value =
-            "(execution(* findByUsername(*)) " +
-                    "|| execution(* findByEmail(*)) " +
-                    "|| execution(* findByMobilePhoneNumber(*)) " +
-                    "|| execution(* findOne(*)))")
-    private void cacheablePointcut() {
-    }
-
 
     ////////////////////////////////////////////////////////////////////////////////
     ////增强实现
@@ -140,7 +98,7 @@ public class UserCacheAspect extends BaseCacheAspect {
         }
 
         User user = null;
-        if (isIdKey == true) {
+        if (isIdKey) {
             user = get(key);
         } else {
             Long id = get(key);
@@ -165,24 +123,6 @@ public class UserCacheAspect extends BaseCacheAspect {
 
     }
 
-
-    private String idKey(String id) {
-        return idKeyPrefix + id;
-    }
-
-    private String usernameKey(String username) {
-        return usernameKeyPrefix + username;
-    }
-
-    private String emailKey(String email) {
-        return emailKeyPrefix + email;
-    }
-
-    private String mobilePhoneNumberKey(String mobilePhoneNumber) {
-        return mobilePhoneNumberKeyPrefix + mobilePhoneNumber;
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////
     ////cache 抽象实现
     ////////////////////////////////////////////////////////////////////////////////
@@ -199,7 +139,6 @@ public class UserCacheAspect extends BaseCacheAspect {
         put(idKey(String.valueOf(id)), user);
     }
 
-
     public void evictId(String id) {
         evict(idKey(id));
     }
@@ -215,5 +154,64 @@ public class UserCacheAspect extends BaseCacheAspect {
         evict(mobilePhoneNumberKey(user.getMobilePhoneNumber()));
     }
 
+    /**
+     * 匹配用户Service
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.user.service.UserService)")
+    private void userServicePointcut() {
+    }
+
+    /**
+     * only put
+     * 如 新增 修改 登录 改密 改状态  只有涉及修改即可
+     */
+    @Pointcut(value =
+            "execution(* save(..)) " +
+                    "|| execution(* saveAndFlush(..)) " +
+                    "|| execution(* update(..)) " +
+                    "|| execution(* login(..)) " +
+                    "|| execution(* changePassword(..)) " +
+                    "|| execution(* changeStatus(..))")
+    private void cachePutPointcut() {
+    }
+
+    /**
+     * evict 比如删除
+     */
+    @Pointcut(value = "(execution(* delete(*))) && args(arg)", argNames = "arg")
+    private void cacheEvictPointcut(Object arg) {
+    }
+
+    /**
+     * put 或 get
+     * 比如查询
+     */
+    @Pointcut(value =
+            "(execution(* findByUsername(*)) " +
+                    "|| execution(* findByEmail(*)) " +
+                    "|| execution(* findByMobilePhoneNumber(*)) " +
+                    "|| execution(* findOne(*)))")
+    private void cacheablePointcut() {
+    }
+
+    private String idKey(String id) {
+        String idKeyPrefix = "id-";
+        return idKeyPrefix + id;
+    }
+
+    private String usernameKey(String username) {
+        String usernameKeyPrefix = "username-";
+        return usernameKeyPrefix + username;
+    }
+
+    private String emailKey(String email) {
+        String emailKeyPrefix = "email-";
+        return emailKeyPrefix + email;
+    }
+
+    private String mobilePhoneNumberKey(String mobilePhoneNumber) {
+        String mobilePhoneNumberKeyPrefix = "mobilePhoneNumber-";
+        return mobilePhoneNumberKeyPrefix + mobilePhoneNumber;
+    }
 
 }

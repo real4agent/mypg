@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.upload.web.controller;
 
 import com.realaicy.pg.core.inject.annotation.BaseComponent;
@@ -25,10 +20,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
- * 文件上传/下载
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-11 上午8:46
- * <p>Version: 1.0
+ * SD-JPA-Controller：文件上传、下载
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "showcase/upload")
@@ -62,7 +63,6 @@ public class UploadController extends BaseCRUDController<Upload, Long> {
         return super.create(model, upload, result, redirectAttributes);
     }
 
-
     @RequestMapping(value = "{id}/update/discard", method = RequestMethod.POST)
     @Override
     public String update(Model model, @Valid @ModelAttribute("m") Upload upload, BindingResult result, @RequestParam(value = "BackURL", required = false) String backURL, RedirectAttributes redirectAttributes) {
@@ -82,6 +82,5 @@ public class UploadController extends BaseCRUDController<Upload, Long> {
         }
         return super.update(model, upload, result, backURL, redirectAttributes);
     }
-
 
 }

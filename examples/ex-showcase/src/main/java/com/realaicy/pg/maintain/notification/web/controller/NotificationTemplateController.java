@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.notification.web.controller;
 
 import com.realaicy.pg.core.entity.search.Searchable;
@@ -25,9 +20,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-1-28 下午4:29
- * <p>Version: 1.0
+ * SD-JPA-Controller：通知模板
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "/admin/maintain/notification/template")
@@ -42,12 +44,6 @@ public class NotificationTemplateController extends BaseCRUDController<Notificat
     }
 
     @Override
-    protected void setCommonData(Model model) {
-        model.addAttribute("notificationSystems", NotificationSystem.values());
-    }
-
-
-    @Override
     @RequestMapping(method = RequestMethod.GET)
     @PageableDefaults(sort = "id=desc")
     @SearchableDefaults(value = "deleted_eq=true", merge = true)
@@ -56,34 +52,13 @@ public class NotificationTemplateController extends BaseCRUDController<Notificat
     }
 
     /**
-     * 验证失败返回true
-     *
-     * @param m
-     * @param result
-     * @return
-     */
-    @Override
-    protected boolean hasError(NotificationTemplate m, BindingResult result) {
-        Assert.notNull(m);
-
-        NotificationTemplate template = notificationTemplateService.findByName(m.getName());
-        if (template == null || (template.getId().equals(m.getId()) && template.getName().equals(m.getName()))) {
-            //success
-        } else {
-            result.rejectValue("name", "该名称已被其他模板使用");
-        }
-
-        return result.hasErrors();
-    }
-
-    /**
      * 验证返回格式
      * 单个：[fieldId, 1|0, msg]
      * 多个：[[fieldId, 1|0, msg],[fieldId, 1|0, msg]]
      *
-     * @param fieldId
-     * @param fieldValue
-     * @return
+     * @param fieldId xxx
+     * @param fieldValue xxx
+     * @return xxx
      */
     @RequestMapping(value = "validate", method = RequestMethod.GET)
     @ResponseBody
@@ -104,5 +79,30 @@ public class NotificationTemplateController extends BaseCRUDController<Notificat
         return response.result();
     }
 
+    @Override
+    protected void setCommonData(Model model) {
+        model.addAttribute("notificationSystems", NotificationSystem.values());
+    }
+
+    /**
+     * 验证失败返回true
+     *
+     * @param m xxx
+     * @param result xxx
+     * @return xxx
+     */
+    @Override
+    protected boolean hasError(NotificationTemplate m, BindingResult result) {
+        Assert.notNull(m);
+
+        NotificationTemplate template = notificationTemplateService.findByName(m.getName());
+        if (template == null || (template.getId().equals(m.getId()) && template.getName().equals(m.getName()))) {
+            //success
+        } else {
+            result.rejectValue("name", "该名称已被其他模板使用");
+        }
+
+        return result.hasErrors();
+    }
 
 }

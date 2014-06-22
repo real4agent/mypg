@@ -113,10 +113,10 @@ public class PageAndSortUserRepositoryNGTest extends BaseUserNGTest {
 
     public User createUser() {
         User user = new User();
-        user.setUsername("zhangkaitao$$$" + System.nanoTime() + RandomStringUtils.random(10));
+        user.setUsername("XudongLiu$$$" + System.nanoTime() + RandomStringUtils.random(10));
         user.setPassword("123456");
         BaseInfo baseInfo = new BaseInfo();
-        baseInfo.setRealname("zhangkaitao");
+        baseInfo.setRealname("XudongLiu");
         baseInfo.setSex(Sex.male);
         user.setBaseInfo(baseInfo);
 

@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.excel.service;
 
 import com.google.common.collect.Lists;
@@ -16,9 +11,13 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-12 下午9:50
- * <p>Version: 1.0
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 class Excel2007ImportSheetHandler extends DefaultHandler {
 
@@ -33,7 +32,6 @@ class Excel2007ImportSheetHandler extends DefaultHandler {
     private ExcelDataService excelDataService;
 
     private List<String> currentCellData = Lists.newArrayList();
-
 
     Excel2007ImportSheetHandler(
             final ExcelDataService excelDataService, final List<ExcelData> dataList, final int batchSize) {
@@ -83,7 +81,6 @@ class Excel2007ImportSheetHandler extends DefaultHandler {
         if ("c".equals(name)) {//按照列顺序添加数据
             currentCellData.add(lastContents);
         }
-
 
     }
 

@@ -34,10 +34,10 @@ public class UserRepository2ImplForCustomSearchNGTest extends BaseUserNGTest {
         int count = 15;
         for (int i = 0; i < count; i++) {
             User user = createUser();
-            user.getBaseInfo().setRealname("zhang" + i);
+            user.getBaseInfo().setRealname("liu" + i);
             userRepository2.save(user);
         }
-        Searchable search = Searchable.newSearchable().addSearchParam("realname_custom", "zhang");
+        Searchable search = Searchable.newSearchable().addSearchParam("realname_custom", "liu");
         assertEquals(count, userRepository2.findAllByCustom(search).getNumberOfElements());
     }
 
@@ -46,11 +46,11 @@ public class UserRepository2ImplForCustomSearchNGTest extends BaseUserNGTest {
         int count = 15;
         for (int i = 0; i < count; i++) {
             User user = createUser();
-            user.getBaseInfo().setRealname("zhang" + i);
+            user.getBaseInfo().setRealname("liu" + i);
             userRepository2.save(user);
         }
         Map<String, Object> searchParams = new HashMap<String, Object>();
-        searchParams.put("realname_custom", "zhang");
+        searchParams.put("realname_custom", "liu");
         Searchable search = Searchable.newSearchable(searchParams).setPage(0, 5);
         assertEquals(5, userRepository2.findAllByCustom(search).getSize());
     }
@@ -60,10 +60,10 @@ public class UserRepository2ImplForCustomSearchNGTest extends BaseUserNGTest {
         int count = 15;
         for (int i = 0; i < count; i++) {
             User user = createUser();
-            user.getBaseInfo().setRealname("zhang" + i);
+            user.getBaseInfo().setRealname("liu" + i);
             userRepository2.save(user);
         }
-        Searchable search = Searchable.newSearchable().addSearchParam("realname", "zhang1");
+        Searchable search = Searchable.newSearchable().addSearchParam("realname", "liu1");
         assertEquals(6, userRepository2.countAllByCustom(search));
     }
 
@@ -72,10 +72,10 @@ public class UserRepository2ImplForCustomSearchNGTest extends BaseUserNGTest {
         int count = 15;
         for (int i = 0; i < count; i++) {
             User user = createUser();
-            user.getBaseInfo().setRealname("zhang" + i);
+            user.getBaseInfo().setRealname("liu" + i);
             userRepository2.save(user);
         }
-        Searchable search = Searchable.newSearchable().addSearchParam("realname", "zhanga");
+        Searchable search = Searchable.newSearchable().addSearchParam("realname", "liua");
         assertEquals(0, userRepository2.countAllByCustom(search));
     }
 

@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.parentchild.web.controller;
 
 import com.realaicy.pg.core.Constants;
@@ -30,9 +25,16 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-1-28 下午4:29
- * <p>Version: 1.0
+ * SD-JPA-Controller：父亲
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "/showcase/parentchild/parent")
@@ -50,17 +52,10 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
         setResourceIdentity("showcase:parentchild");
     }
 
-
-    @Override
-    protected void setCommonData(Model model) {
-        model.addAttribute("booleanList", BooleanEnum.values());
-        model.addAttribute("typeList", ParentChildType.values());
-    }
-
-
     @RequestMapping(value = "create/discard", method = RequestMethod.POST)
     @Override
-    public String create(Model model, @Valid @ModelAttribute("m") Parent parent, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String create(Model model, @Valid @ModelAttribute("m") Parent parent,
+                         BindingResult result, RedirectAttributes redirectAttributes) {
         throw new RuntimeException("discarded method");
     }
 
@@ -115,27 +110,6 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
         return super.showDeleteForm(parent, model);
     }
 
-    /**
-     * 验证失败返回true
-     *
-     * @param parent
-     * @param result
-     * @return
-     */
-    protected boolean hasError(Parent parent, BindingResult result) {
-        Assert.notNull(parent);
-
-        //全局错误 前台使用<pg:showGlobalError commandName="showcase/parent"/> 显示
-        if (parent.getName().contains("admin")) {
-            result.reject("name.must.not.admin");
-        }
-
-        return result.hasErrors();
-    }
-
-
-    //////////////////////////////////child////////////////////////////////////
-
     @RequestMapping(value = "{parent}/child", method = RequestMethod.GET)
     @PageableDefaults(value = Integer.MAX_VALUE, sort = "id=desc")
     public String listChild(Model model, @PathVariable("parent") Long parentId, Searchable searchable) {
@@ -161,6 +135,8 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
         }
         return "showcase/parentchild/child/editForm";
     }
+
+    //////////////////////////////////child////////////////////////////////////
 
     @RequestMapping(value = "child/{id}/update", method = RequestMethod.GET)
     public String showChildUpdateForm(
@@ -194,7 +170,6 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
         return child;
     }
 
-
     @RequestMapping(value = "child/batch/delete")
     @ResponseBody
     public Object deleteChildInBatch(@RequestParam(value = "ids", required = false) Long[] ids) {
@@ -205,5 +180,24 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
         return ids;
     }
 
+    @Override
+    protected void setCommonData(Model model) {
+        model.addAttribute("booleanList", BooleanEnum.values());
+        model.addAttribute("typeList", ParentChildType.values());
+    }
+
+    /**
+     * 验证失败返回true
+     */
+    protected boolean hasError(Parent parent, BindingResult result) {
+        Assert.notNull(parent);
+
+        //全局错误 前台使用<pg:showGlobalError commandName="showcase/parent"/> 显示
+        if (parent.getName().contains("admin")) {
+            result.reject("name.must.not.admin");
+        }
+
+        return result.hasErrors();
+    }
 
 }

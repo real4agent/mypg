@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * 表：权限
+ * 实体：权限
  *
  * @author realaicy
  * @version 1.1

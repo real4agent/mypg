@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.notification.service;
 
 import com.google.common.collect.Lists;
@@ -25,9 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-8 下午5:25
- * <p>Version: 1.0
+ * 通知API的默认实现
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Service
 public class NotificationApiImpl implements NotificationApi {
@@ -43,6 +44,7 @@ public class NotificationApiImpl implements NotificationApi {
 
     /**
      * 异步发送
+     *
      * @param userId 接收人用户编号
      * @param templateName 模板名称
      * @param context 模板需要的数据
@@ -52,7 +54,7 @@ public class NotificationApiImpl implements NotificationApi {
     public void notify(final Long userId, final String templateName, final Map<String, Object> context) {
         NotificationTemplate template = notificationTemplateService.findByName(templateName);
 
-        if(template == null) {
+        if (template == null) {
             throw new TemplateNotFoundException(templateName);
         }
 
@@ -64,8 +66,8 @@ public class NotificationApiImpl implements NotificationApi {
 
         String content = template.getTemplate();
         String title = template.getTitle();
-        if(context != null) {
-            for(String key : context.keySet()) {
+        if (context != null) {
+            for (String key : context.keySet()) {
                 //TODO 如果量大可能有性能问题 需要调优
                 title = title.replace("{" + key + "}", String.valueOf(context.get(key)));
                 content = content.replace("{" + key + "}", String.valueOf(context.get(key)));
@@ -76,7 +78,6 @@ public class NotificationApiImpl implements NotificationApi {
         data.setContent(content);
 
         notificationDataService.save(data);
-
 
         pushApi.pushNewNotification(userId, topFiveNotification(userId));
 
@@ -95,7 +96,7 @@ public class NotificationApiImpl implements NotificationApi {
 
         Page<NotificationData> page = notificationDataService.findAll(searchable);
 
-        for(NotificationData data : page.getContent()) {
+        for (NotificationData data : page.getContent()) {
             Map<String, Object> map = Maps.newHashMap();
             map.put("id", data.getId());
             map.put("title", data.getTitle());

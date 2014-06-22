@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.monitor.web.controller;
 
 import com.realaicy.pg.core.repository.hibernate.HibernateUtils;
@@ -26,9 +21,15 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-27 下午6:50
- * <p>Version: 1.0
+ * Hibernate缓存信息查看
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping("/admin/monitor/hibernate")
@@ -51,7 +52,6 @@ public class HibernateCacheMonitorController extends BaseController {
 
     /**
      * 所有信息
-     * @return
      */
     @RequestMapping("")
     public String index(Model model) {
@@ -65,16 +65,14 @@ public class HibernateCacheMonitorController extends BaseController {
 
     /**
      * 查询缓存统计
-     * @return
      */
     @RequestMapping("/queryCache")
-     public String queryCache() {
+    public String queryCache() {
         return viewName("queryCache");
     }
 
     /**
      * 二级缓存统计
-     * @return
      */
     @RequestMapping("/secondLevelCache")
     public String secondLevelCache(Model model) {
@@ -82,20 +80,16 @@ public class HibernateCacheMonitorController extends BaseController {
         return viewName("secondLevelCache");
     }
 
-
     /**
      * 实体和集合 增删改查 次数 统计
-     * @return
      */
     @RequestMapping("/entityAndCollectionCRUDCount")
     public String entityAndCollectionCRUDCount() {
         return viewName("entityAndCollectionCRUDCount");
     }
 
-
     /**
      * 实体和集合 增删改查 次数 统计
-     * @return
      */
     @RequestMapping(value = "/control", method = RequestMethod.GET)
     public String showControlForm() {
@@ -113,15 +107,15 @@ public class HibernateCacheMonitorController extends BaseController {
 
         Cache cache = HibernateUtils.getCache(em);
 
-        if(entityNamesEmpty && entityIdsEmpty) {
+        if (entityNamesEmpty && entityIdsEmpty) {
             cache.evictEntityRegions();
-        } else if(entityIdsEmpty) {
-            for(String entityName : entityNames) {
+        } else if (entityIdsEmpty) {
+            for (String entityName : entityNames) {
                 cache.evictEntityRegion(entityName);
             }
         } else {
-            for(String entityName : entityNames) {
-                for(Serializable entityId : entityIds) {
+            for (String entityName : entityNames) {
+                for (Serializable entityId : entityIds) {
                     cache.evictEntity(entityName, entityId);
                 }
             }
@@ -136,22 +130,23 @@ public class HibernateCacheMonitorController extends BaseController {
             @RequestParam(value = "collectionRoleNames", required = false) String[] collectionRoleNames,
             @RequestParam(value = "collectionEntityIds", required = false) Serializable[] collectionEntityIds) {
 
-
         boolean collectionRoleNamesEmpty = ArrayUtils.isEmpty(collectionRoleNames);
         boolean collectionEntityIdsEmpty = ArrayUtils.isEmpty(collectionEntityIds);
 
         Cache cache = HibernateUtils.getCache(em);
 
-        if(collectionRoleNamesEmpty && collectionEntityIdsEmpty) {
+        if (collectionRoleNamesEmpty && collectionEntityIdsEmpty) {
             cache.evictEntityRegions();
-        } else if(collectionEntityIdsEmpty) {
-            for(String collectionRoleName : collectionRoleNames) {
+        } else if (collectionEntityIdsEmpty) {
+            for (String collectionRoleName : collectionRoleNames) {
                 cache.evictCollectionRegion(collectionRoleName);
             }
         } else {
-            for(String collectionRoleName : collectionRoleNames) {
-                for(Serializable collectionEntityId : collectionEntityIds) {
-                    cache.evictCollection(collectionRoleName, collectionEntityIds);
+            for (String collectionRoleName : collectionRoleNames) {
+                for (Serializable collectionEntityId : collectionEntityIds) {
+                    //cache.evictCollection(collectionRoleName, collectionEntityIds);
+                    cache.evictCollection(collectionRoleName, collectionEntityId);
+
                 }
             }
         }
@@ -164,16 +159,15 @@ public class HibernateCacheMonitorController extends BaseController {
     public String evictQuery(
             @RequestParam(value = "queries", required = false) String[] queries) {
 
-
         boolean queriesEmpty = ArrayUtils.isEmpty(queries);
 
         Cache cache = HibernateUtils.getCache(em);
 
-        if(queriesEmpty) {
+        if (queriesEmpty) {
             cache.evictQueryRegions();
             cache.evictDefaultQueryRegion();
         } else {
-            for(String query : queries) {
+            for (String query : queries) {
                 cache.evictQueryRegion(query);
             }
         }
@@ -196,7 +190,6 @@ public class HibernateCacheMonitorController extends BaseController {
         return "操作成功";
     }
 
-
     private void setMemoryInfo(Model model) {
         //系统的
         MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
@@ -213,7 +206,7 @@ public class HibernateCacheMonitorController extends BaseController {
         int totalMemoryCount = 0;
         int totalDiskCount = 0;
 
-        for(String secondLevelCacheRegionName : secondLevelCacheRegionNames) {
+        for (String secondLevelCacheRegionName : secondLevelCacheRegionNames) {
             SecondLevelCacheStatistics secondLevelCacheStatistics =
                     statistics.getSecondLevelCacheStatistics(secondLevelCacheRegionName);
             totalMemorySize += secondLevelCacheStatistics.getSizeInMemory();

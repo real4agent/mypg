@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.product.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -13,10 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * 产品类别
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-19 上午8:59
- * <p>Version: 1.0
+ * 实体：产品类别
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "showcase_category")
@@ -27,7 +27,6 @@ public class Category extends BaseEntity<Long> implements Movable {
 
     @Column(name = "weight")
     private Integer weight;
-
 
     @Column(name = "is_show")
     private Boolean show;

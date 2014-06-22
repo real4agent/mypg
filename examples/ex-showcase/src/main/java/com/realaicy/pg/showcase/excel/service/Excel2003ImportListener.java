@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.excel.service;
 
 import com.realaicy.pg.showcase.excel.entity.ExcelData;
@@ -12,19 +7,21 @@ import org.apache.poi.hssf.record.*;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-12 下午9:47
- * <p>Version: 1.0
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 class Excel2003ImportListener implements HSSFListener {
 
-
     int batchSize; //批处理大小
     int totalSize = 0; //总大小
-    private SSTRecord sstrec;
-
     List<ExcelData> dataList;
     ExcelData current = null;
+    private SSTRecord sstrec;
     private ExcelDataService excelDataService;
 
     Excel2003ImportListener(
@@ -61,35 +58,35 @@ class Excel2003ImportListener implements HSSFListener {
                 break;
             case NumberRecord.sid:
             case LabelSSTRecord.sid:
-                if(record instanceof NumberRecord) {
+                if (record instanceof NumberRecord) {
                     //解析一个Number类型的单元格值
                     NumberRecord numrec = (NumberRecord) record;
                     //numrec.getRow()  numrec.getColumn()   numrec.getValue()
 
-                    if(numrec.getRow() == 0) {
+                    if (numrec.getRow() == 0) {
                         //第一行 跳过
                         break;
-                    } else if(numrec.getColumn() == 0) { //第一列
+                    } else if (numrec.getColumn() == 0) { //第一列
                         current = new ExcelData();
                         current.setId(Double.valueOf(numrec.getValue()).longValue());
-                    } else if(numrec.getColumn() == 1) {//第二列
+                    } else if (numrec.getColumn() == 1) {//第二列
                         current.setContent(String.valueOf(Double.valueOf(numrec.getValue()).longValue()));
                         add(current);
                     }
                     break;
 
-                } else if(record instanceof LabelSSTRecord) {
+                } else if (record instanceof LabelSSTRecord) {
                     //解析一个String类型的单元格值（存储在SSTRecord）
                     LabelSSTRecord lrec = (LabelSSTRecord) record;
 
-                    if(lrec.getRow() == 0) {
+                    if (lrec.getRow() == 0) {
                         //第一行 跳过
                         break;
-                    } else if(lrec.getColumn() == 0) { //第一列
+                    } else if (lrec.getColumn() == 0) { //第一列
                         current = new ExcelData();
                         String value = sstrec.getString(lrec.getSSTIndex()).getString();
                         current.setId(Double.valueOf(value).longValue());
-                    } else if(lrec.getColumn() == 1) {//第二列
+                    } else if (lrec.getColumn() == 1) {//第二列
                         String value = sstrec.getString(lrec.getSSTIndex()).getString();
                         current.setContent(value);
                         add(current);

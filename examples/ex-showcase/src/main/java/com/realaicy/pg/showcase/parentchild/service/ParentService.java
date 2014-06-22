@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.parentchild.service;
 
 import com.realaicy.pg.core.inject.annotation.BaseComponent;
@@ -16,9 +11,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-4 下午3:01
- * <p>Version: 1.0
+ * SD-JPA-Service：父亲
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Service
 public class ParentService extends BaseService<Parent, Long> {
@@ -29,7 +31,6 @@ public class ParentService extends BaseService<Parent, Long> {
 
     @Autowired
     private ChildService childService;
-
 
     public void save(Parent parent, List<Child> childList) {
         save(parent);

@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.notification.service;
 
 import com.realaicy.pg.core.inject.annotation.BaseComponent;
@@ -13,9 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-22 下午2:40
- * <p>Version: 1.0
+ * SD-JPA-Service：通知模板
+ * <p/>
+ * 提供如下服务：<br/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Service
 public class NotificationTemplateService extends BaseService<NotificationTemplate, Long> {
@@ -23,7 +26,6 @@ public class NotificationTemplateService extends BaseService<NotificationTemplat
     @Autowired
     @BaseComponent
     private NotificationTemplateRepository notificationTemplateRepository;
-
 
     public NotificationTemplate findByName(final String name) {
         return notificationTemplateRepository.findByName(name);

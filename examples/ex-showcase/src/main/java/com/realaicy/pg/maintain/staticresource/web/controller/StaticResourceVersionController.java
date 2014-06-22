@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.staticresource.web.controller;
 
 import com.google.common.collect.Lists;
@@ -32,22 +27,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
- * 静态资源版本控制
- * 要求
- *  所有需要版本控制的静态资源 以.jspf为后缀 放到webapp/WEB-INF/jsp/common下
+ * * SD-JPA-Controller：静态资源版本控制
+ * <p/>
+ * 要求: 所有需要版本控制的静态资源 以.jspf为后缀 放到webapp/WEB-INF/jsp/common下
  * 这样即可扫描这些文件实施版本控制
  *
- * <p>User: Zhang Kaitao
- * <p>Date: 13-6-7 下午2:26
- * <p>Version: 1.0
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping("/admin/maintain/staticResource")
 @RequiresPermissions("maintain:staticResource:*")
 public class StaticResourceVersionController extends BaseController {
 
-    private final String versionedResourcePath ="/WEB-INF/jsp/core";
+    private final String versionedResourcePath = "/WEB-INF/jsp/core";
     private final Pattern scriptPattern =
             Pattern.compile("(.*<script.* src=[\'\"])(.*?)(\\??)(\\d*)([\'\"].*>.*)", Pattern.CASE_INSENSITIVE);
     private final Pattern linkPattern =
@@ -90,7 +88,7 @@ public class StaticResourceVersionController extends BaseController {
 
         String realPath = sc.getRealPath(versionedResourcePath);
 
-        for(int i = 0, l = fileNames.length; i < l; i++) {
+        for (int i = 0, l = fileNames.length; i < l; i++) {
             versionedStaticResourceContent(realPath + fileNames[i], contents[i], newVersions[i]);
         }
 
@@ -107,14 +105,13 @@ public class StaticResourceVersionController extends BaseController {
 
         String realPath = sc.getRealPath(versionedResourcePath);
 
-        for(int i = 0, l = fileNames.length; i < l; i++) {
+        for (int i = 0, l = fileNames.length; i < l; i++) {
             versionedStaticResourceContent(realPath + fileNames[i], contents[i], null);
         }
 
         return "操作成功";
 
     }
-
 
     @RequestMapping("compress")
     @ResponseBody
@@ -134,8 +131,6 @@ public class StaticResourceVersionController extends BaseController {
         }
     }
 
-
-
     @RequestMapping("batchCompress")
     @ResponseBody
     public String batchCompress(
@@ -143,34 +138,32 @@ public class StaticResourceVersionController extends BaseController {
             @RequestParam("contents[]") String[] contents
     ) throws IOException {
 
-
         String rootRealPath = sc.getRealPath("/WEB-INF");
         String versionedResourceRealPath = sc.getRealPath(versionedResourcePath);
 
         StringBuilder success = new StringBuilder();
         StringBuilder error = new StringBuilder();
 
-
         for (int i = 0, l = fileNames.length; i < l; i++) {
             try {
                 String fileName = fileNames[i];
                 String content = contents[i];
                 String minFilePath = compressStaticResource(rootRealPath, versionedResourceRealPath + fileName, content);
-                success.append("压缩成功，压缩好的文件为：" + minFilePath + "<br/>");
+                success.append("压缩成功，压缩好的文件为：").append(minFilePath).append("<br/>");
             } catch (Exception e) {
-                error.append("压缩失败：" + e.getMessage() + "<br/>");
+                error.append("压缩失败：").append(e.getMessage()).append("<br/>");
             }
         }
 
         return success.insert(0, "成功的压缩：<br/>").append("<br/>失败的压缩：<br/>").append(error).toString();
     }
 
-
     /**
      * 切换版本
-     * @param fileName
-     * @param content
-     * @return
+     *
+     * @param fileName xxx
+     * @param content xxx
+     * @return xx
      */
     @RequestMapping("switch")
     @ResponseBody
@@ -185,7 +178,6 @@ public class StaticResourceVersionController extends BaseController {
         data.put("msg", "切换成功");
         data.put("success", true);
 
-        
         String rootRealPath = sc.getRealPath("/WEB-INF");
         String versionedResourceRealPath = sc.getRealPath(versionedResourcePath);
 
@@ -201,12 +193,12 @@ public class StaticResourceVersionController extends BaseController {
         }
     }
 
-
     /**
      * 批量切换版本
-     * @param fileNames
-     * @param contents
-     * @return
+     *
+     * @param fileNames xxx
+     * @param contents xxx
+     * @return xxx
      * @throws java.io.IOException
      */
     @RequestMapping("batchSwitch")
@@ -224,22 +216,20 @@ public class StaticResourceVersionController extends BaseController {
         StringBuilder success = new StringBuilder();
         StringBuilder error = new StringBuilder();
 
-
         for (int i = 0, l = fileNames.length; i < l; i++) {
             try {
                 String fileName = fileNames[i];
                 String content = contents[i];
                 StaticResource resource =
                         switchStaticResourceContent(rootRealPath, versionedResourceRealPath, fileName, content, isMin);
-                success.append("切换成功，切换到的文件为：" + resource.getUrl() + "<br/>");
+                success.append("切换成功，切换到的文件为：").append(resource.getUrl()).append("<br/>");
             } catch (Exception e) {
-                error.append("切换失败：" + e.getMessage() + "<br/>");
+                error.append("切换失败：").append(e.getMessage()).append("<br/>");
             }
         }
 
         return success.insert(0, "成功的切换：<br/>").append("<br/>失败的切换：<br/>").append(error).toString();
     }
-
 
     private StaticResource switchStaticResourceContent(String rootRealPath, String versionedResourceRealPath, String fileName, String content, boolean isMin) throws IOException {
 
@@ -247,14 +237,14 @@ public class StaticResourceVersionController extends BaseController {
         String filePath = resource.getUrl();
         filePath = filePath.replace("${ctx}", rootRealPath);
 
-        if(isMin) {
+        if (isMin) {
             File file = new File(YuiCompressorUtils.getCompressFileName(filePath));
-            if(!file.exists()) {
+            if (!file.exists()) {
                 throw new RuntimeException("请先压缩文件：" + resource.getUrl());
             }
         } else {
             File file = new File(YuiCompressorUtils.getNoneCompressFileName(filePath));
-            if(!file.exists()) {
+            if (!file.exists()) {
                 throw new RuntimeException("没有压缩文件对应的非压缩版：" + resource.getUrl());
             }
         }
@@ -265,18 +255,17 @@ public class StaticResourceVersionController extends BaseController {
 
         List<String> contents = FileUtils.readLines(file);
 
-        for(int i = 0, l = contents.size(); i < l; i++) {
+        for (int i = 0, l = contents.size(); i < l; i++) {
             String fileContent = contents.get(i);
-            if(content.equals(fileContent)) {
+            if (content.equals(fileContent)) {
                 Matcher matcher = scriptPattern.matcher(content);
-                if(!matcher.matches()) {
+                if (!matcher.matches()) {
                     matcher = linkPattern.matcher(content);
                 }
                 String newUrl = isMin ?
                         YuiCompressorUtils.getCompressFileName(resource.getUrl())
                         :
                         YuiCompressorUtils.getNoneCompressFileName(resource.getUrl());
-
 
                 content = matcher.replaceAll("$1" + Matcher.quoteReplacement(newUrl) + "$3$4$5");
                 contents.set(i, content);
@@ -292,18 +281,16 @@ public class StaticResourceVersionController extends BaseController {
         return resource;
     }
 
-
-
     private String compressStaticResource(String rootRealPath, String includeFilePath, String content) {
         StaticResource resource = extractResource(includeFilePath, content);
         String filePath = resource.getUrl();
         filePath = filePath.replace("${ctx}", rootRealPath);
 
-        if(YuiCompressorUtils.hasCompress(filePath)) {
+        if (YuiCompressorUtils.hasCompress(filePath)) {
             throw new RuntimeException("[" + filePath + "]文件已经是压缩过的了，不需要再压缩了");
         }
 
-        if(filePath.startsWith("http://")) {
+        if (filePath.startsWith("http://")) {
             throw new RuntimeException("[" + filePath + "]文件是互联网上的，无法压缩");
         }
 
@@ -313,12 +300,10 @@ public class StaticResourceVersionController extends BaseController {
 
     }
 
-
-
     private String versionedStaticResourceContent(String fileRealPath, String content, String newVersion) throws IOException {
 
         content = StringEscapeUtils.unescapeXml(content);
-        if(newVersion != null && newVersion.equals("1")) {
+        if (newVersion != null && newVersion.equals("1")) {
             newVersion = "?" + newVersion;
         }
 
@@ -326,14 +311,14 @@ public class StaticResourceVersionController extends BaseController {
 
         List<String> contents = FileUtils.readLines(file);
 
-        for(int i = 0, l = contents.size(); i < l; i++) {
+        for (int i = 0, l = contents.size(); i < l; i++) {
             String fileContent = contents.get(i);
-            if(content.equals(fileContent)) {
+            if (content.equals(fileContent)) {
                 Matcher matcher = scriptPattern.matcher(content);
-                if(!matcher.matches()) {
+                if (!matcher.matches()) {
                     matcher = linkPattern.matcher(content);
                 }
-                if(newVersion == null) { //删除版本
+                if (newVersion == null) { //删除版本
                     content = matcher.replaceAll("$1$2$5");
                 } else {
                     content = matcher.replaceAll("$1$2$3" + newVersion + "$5");
@@ -346,7 +331,6 @@ public class StaticResourceVersionController extends BaseController {
 
         return content;
     }
-
 
     private Map<String, List<StaticResource>> findStaticResources(String realPath) throws IOException {
 
@@ -386,16 +370,16 @@ public class StaticResourceVersionController extends BaseController {
     private StaticResource extractResource(String fileName, String content) {
 
         Matcher matcher = scriptPattern.matcher(content);
-        if(!matcher.matches()) {
+        if (!matcher.matches()) {
             matcher = linkPattern.matcher(content);
         }
 
-        if(!matcher.matches()) {
+        if (!matcher.matches()) {
             return null;
         }
 
         String url = matcher.group(2);
-        String version = "";
+        String version;
         version = matcher.group(4);
 
         StaticResource resource = new StaticResource(fileName, content);
@@ -404,7 +388,6 @@ public class StaticResourceVersionController extends BaseController {
 
         return resource;
     }
-
 
     public static class StaticResource {
         private String fileName;
@@ -416,7 +399,6 @@ public class StaticResourceVersionController extends BaseController {
             this.fileName = fileName;
             this.content = content;
         }
-
 
         public String getFileName() {
             return fileName;

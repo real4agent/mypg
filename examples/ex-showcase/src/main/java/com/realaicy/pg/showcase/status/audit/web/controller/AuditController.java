@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.status.audit.web.controller;
 
 import com.realaicy.pg.core.Constants;
@@ -27,9 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-1-28 下午4:29
- * <p>Version: 1.0
+ * SD-JPA-Controller：审计状态
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "/showcase/status/audit")
@@ -43,12 +45,6 @@ public class AuditController extends BaseCRUDController<Audit, Long> {
         setListAlsoSetCommonData(true);
         setResourceIdentity("showcase:statusAudit");
     }
-
-    @Override
-    protected void setCommonData(Model model) {
-        model.addAttribute("statusList", Stateable.AuditStatus.values());
-    }
-
 
     @RequestMapping(value = "status/{status}", method = RequestMethod.GET)
     public String audit(
@@ -81,12 +77,13 @@ public class AuditController extends BaseCRUDController<Audit, Long> {
         return "redirect:" + request.getAttribute(Constants.BACK_URL);
     }
 
+    @Override
+    protected void setCommonData(Model model) {
+        model.addAttribute("statusList", Stateable.AuditStatus.values());
+    }
+
     /**
      * 验证失败返回true
-     *
-     * @param m
-     * @param result
-     * @return
      */
     @Override
     protected boolean hasError(Audit m, BindingResult result) {

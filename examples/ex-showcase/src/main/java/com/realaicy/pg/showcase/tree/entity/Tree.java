@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.tree.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -15,9 +10,15 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-4 上午9:38
- * <p>Version: 1.0
+ * 实体：树形结构
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "showcase_tree")
@@ -54,7 +55,6 @@ public class Tree extends BaseEntity<Long> implements Treeable<Long> {
      */
     @Column(name = "is_show")
     private Boolean show = Boolean.FALSE;
-
 
     public String getName() {
         return name;
@@ -115,26 +115,15 @@ public class Tree extends BaseEntity<Long> implements Treeable<Long> {
         this.icon = icon;
     }
 
-
     @Override
     public boolean isRoot() {
-        if (getParentId() != null && getParentId() == 0) {
-            return true;
-        }
-        return false;
+        return getParentId() != null && getParentId() == 0;
     }
-
 
     @Override
     public boolean isLeaf() {
-        if (isRoot()) {
-            return false;
-        }
-        if (isHasChildren()) {
-            return false;
-        }
+        return !isRoot() && !isHasChildren();
 
-        return true;
     }
 
     @Override
@@ -154,11 +143,8 @@ public class Tree extends BaseEntity<Long> implements Treeable<Long> {
         this.show = show;
     }
 
-
     /**
      * 根节点默认图标 如果没有默认 空即可
-     *
-     * @return
      */
     @Override
     public String getRootDefaultIcon() {
@@ -167,8 +153,6 @@ public class Tree extends BaseEntity<Long> implements Treeable<Long> {
 
     /**
      * 树枝节点默认图标 如果没有默认 空即可
-     *
-     * @return
      */
     @Override
     public String getBranchDefaultIcon() {
@@ -177,8 +161,6 @@ public class Tree extends BaseEntity<Long> implements Treeable<Long> {
 
     /**
      * 树叶节点默认图标 如果没有默认 空即可
-     *
-     * @return
      */
     @Override
     public String getLeafDefaultIcon() {

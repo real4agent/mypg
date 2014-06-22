@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.move.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -15,9 +10,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-4 上午9:38
- * <p>Version: 1.0
+ * 实体：可移动对象
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "showcase_moveable")
@@ -29,7 +30,6 @@ public class Move extends BaseEntity<Long> implements Movable {
 
     @Column(name = "weight")
     private Integer weight;
-
 
     @Column(name = "is_show")
     private Boolean show;

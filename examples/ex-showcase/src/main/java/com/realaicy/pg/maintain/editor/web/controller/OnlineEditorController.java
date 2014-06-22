@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.editor.web.controller;
 
 import com.google.common.collect.Lists;
@@ -49,21 +44,26 @@ import java.util.Map;
 import static com.realaicy.pg.maintain.editor.web.controller.utils.OnlineEditorUtils.*;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-6-9 下午8:09
- * <p>Version: 1.0
+ * 在线编辑器-控制器
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping("/admin/maintain/editor")
 @RequiresPermissions("maintain:onlineEditor:*")
 public class OnlineEditorController extends BaseController {
 
-
     private final String ROOT_DIR = "/";
 
     private final long MAX_SIZE = 20000000; //20MB
-    private final String[] ALLOWED_EXTENSION = new String[] {
-            "bmp","gif","jpeg", "jpg", "png",
+    private final String[] ALLOWED_EXTENSION = new String[]{
+            "bmp", "gif", "jpeg", "jpg", "png",
             "pdf",
             "docx", "doc", "xlsx", "xls", "pptx", "ppt",
             "zip", "rar",
@@ -73,10 +73,8 @@ public class OnlineEditorController extends BaseController {
     //允许\ 即多级目录创建
     private final String VALID_FILENAME_PATTERN = "[^\\s:\\*\\?\\\"<>\\|]?(\\x20|[^\\s:\\*\\?\\\"<>\\|])*[^\\s:\\*\\?\\\"<>\\|\\.]?$";
 
-
     @Autowired
     private ServletContext sc;
-    
 
     @RequestMapping(value = {"", "main"}, method = RequestMethod.GET)
     public String main() {
@@ -90,24 +88,23 @@ public class OnlineEditorController extends BaseController {
         long id = 0L;
         File rootDirectory = new File(rootPath);
 
-        Map<Object, Object> root= extractFileInfoMap(rootDirectory, rootPath, id, -1);
+        Map<Object, Object> root = extractFileInfoMap(rootDirectory, rootPath, id, -1);
 
         List<Map> trees = Lists.newArrayList();
         trees.add(root);
 
-        for(File subFile : rootDirectory.listFiles()) {
-            if(!subFile.isDirectory()) {
+        for (File subFile : rootDirectory.listFiles()) {
+            if (!subFile.isDirectory()) {
                 continue;
             }
             id++;
-            trees.add(extractFileInfoMap(subFile, rootPath, id, (Long)root.get("id")));
+            trees.add(extractFileInfoMap(subFile, rootPath, id, (Long) root.get("id")));
         }
 
-         model.addAttribute("trees", trees);
+        model.addAttribute("trees", trees);
 
         return viewName("tree");
     }
-
 
     @RequestMapping(value = "ajax/load", method = RequestMethod.GET)
     @ResponseBody
@@ -126,12 +123,12 @@ public class OnlineEditorController extends BaseController {
 
         long id = parentId;
 
-        for(File subFile : parentPathDirectory.listFiles()) {
-            if(!subFile.isDirectory()) {
+        for (File subFile : parentPathDirectory.listFiles()) {
+            if (!subFile.isDirectory()) {
                 continue;
             }
             String path = URLEncoder.encode(subFile.getAbsolutePath().replace(rootPath, ""), Constants.ENCODING);
-            if(isExclude(excludePaths, path)) {
+            if (isExclude(excludePaths, path)) {
                 continue;
             }
             id++;
@@ -139,7 +136,6 @@ public class OnlineEditorController extends BaseController {
         }
         return trees;
     }
-
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String listFile(
@@ -159,15 +155,14 @@ public class OnlineEditorController extends BaseController {
         current.put("name", currentDirectory.getName());
 
         Map<Object, Object> parent = null;
-        if(hasParent(currentDirectory, rootPath)) {
+        if (hasParent(currentDirectory, rootPath)) {
             File parentDirectory = currentDirectory.getParentFile();
             parent = extractFileInfoMap(parentDirectory, rootPath);
             parent.put("name", parentDirectory.getName());
         }
 
-
         List<Map<Object, Object>> files = Lists.newArrayList();
-        for(File subFile : currentDirectory.listFiles()) {
+        for (File subFile : currentDirectory.listFiles()) {
             files.add(extractFileInfoMap(subFile, rootPath));
         }
 
@@ -192,39 +187,26 @@ public class OnlineEditorController extends BaseController {
         long id = 0L;
         File rootDirectory = new File(rootPath);
 
-        Map<Object, Object> root= extractFileInfoMap(rootDirectory, rootPath, id, -1);
+        Map<Object, Object> root = extractFileInfoMap(rootDirectory, rootPath, id, -1);
 
         trees.add(root);
 
-        for(File subFile : rootDirectory.listFiles()) {
-            if(!subFile.isDirectory()) {
+        for (File subFile : rootDirectory.listFiles()) {
+            if (!subFile.isDirectory()) {
                 continue;
             }
             String path = URLEncoder.encode(subFile.getAbsolutePath().replace(rootPath, ""), Constants.ENCODING);
-            if(isExclude(excludePaths, path)) {
+            if (isExclude(excludePaths, path)) {
                 continue;
             }
             id++;
-            trees.add(extractFileInfoMap(subFile, rootPath, id, (Long)root.get("id")));
+            trees.add(extractFileInfoMap(subFile, rootPath, id, (Long) root.get("id")));
         }
 
         model.addAttribute("trees", trees);
         model.addAttribute("excludePaths", excludePaths);
 
         return viewName("selectForm");
-    }
-
-    private boolean isExclude(String[] excludePaths, String path) {
-        if (excludePaths == null) {
-            return false;
-        }
-        for (int i = 0; i < excludePaths.length; i++) {
-            String excludePath = excludePaths[i];
-            if(path.equals(excludePath)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.GET)
@@ -235,33 +217,31 @@ public class OnlineEditorController extends BaseController {
 
         String rootPath = sc.getRealPath(ROOT_DIR);
 
-
         path = URLDecoder.decode(path, Constants.ENCODING);
         File file = new File(rootPath + File.separator + path);
         String parentPath = file.getParentFile().getAbsolutePath().replace(rootPath, "");
 
         boolean hasError = false;
-        if(file.isDirectory()) {
+        if (file.isDirectory()) {
             hasError = true;
             redirectAttributes.addFlashAttribute(Constants.ERROR, path + "是目录，不能编辑！");
         }
 
-        if(!file.exists()) {
+        if (!file.exists()) {
             hasError = true;
             redirectAttributes.addFlashAttribute(Constants.ERROR, path + "文件不存在，不能编辑！");
         }
 
-        if(!file.canWrite()) {
+        if (!file.canWrite()) {
             hasError = true;
             redirectAttributes.addFlashAttribute(Constants.ERROR, path + "文件是只读的，不能编辑，请修改文件权限！");
         }
-        if(!file.canRead()) {
+        if (!file.canRead()) {
             hasError = true;
             redirectAttributes.addFlashAttribute(Constants.ERROR, path + "文件不能读取，不能编辑，请修改文件权限！");
         }
 
-
-        if(hasError) {
+        if (hasError) {
             redirectAttributes.addAttribute("path", parentPath);
             return redirectToUrl(viewName("list"));
         }
@@ -273,8 +253,6 @@ public class OnlineEditorController extends BaseController {
 
         return viewName("editForm");
     }
-
-
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     public String edit(
@@ -295,11 +273,6 @@ public class OnlineEditorController extends BaseController {
         return redirectToUrl(viewName("list"));
     }
 
-
-    ////////////////////////////////////////////////////////////
-    //CRUD操作
-    ////////////////////////////////////////////////////////////
-
     @RequestMapping("/rename")
     public String rename(
             @RequestParam(value = "path") String path,
@@ -315,7 +288,7 @@ public class OnlineEditorController extends BaseController {
 
         File renameToFile = new File(parent, newName);
         boolean result = current.renameTo(renameToFile);
-        if(result == false) {
+        if (!result) {
             redirectAttributes.addFlashAttribute(Constants.ERROR, "名称为[" + newName + "]的文件/目录已经存在");
         } else {
             redirectAttributes.addFlashAttribute(Constants.MESSAGE, "重命名成功");
@@ -325,6 +298,9 @@ public class OnlineEditorController extends BaseController {
         return redirectToUrl(viewName("list"));
     }
 
+    ////////////////////////////////////////////////////////////
+    //CRUD操作
+    ////////////////////////////////////////////////////////////
 
     @RequestMapping("/delete")
     public String delete(
@@ -333,7 +309,7 @@ public class OnlineEditorController extends BaseController {
 
         String rootPath = sc.getRealPath(ROOT_DIR);
 
-        for(String path : paths) {
+        for (String path : paths) {
             path = URLDecoder.decode(path, Constants.ENCODING);
             File current = new File(rootPath + File.separator + path);
             FileUtils.deleteQuietly(current);
@@ -348,8 +324,6 @@ public class OnlineEditorController extends BaseController {
         return redirectToUrl(viewName("list"));
     }
 
-
-
     @RequestMapping("/create/directory")
     public String createDirectory(
             @RequestParam(value = "parentPath") String parentPath,
@@ -359,14 +333,14 @@ public class OnlineEditorController extends BaseController {
         //删除最后的/
         name = FilenameUtils.normalizeNoEndSeparator(name);
 
-        if(isValidFileName(name)) {
+        if (isValidFileName(name)) {
             String rootPath = sc.getRealPath(ROOT_DIR);
             parentPath = URLDecoder.decode(parentPath, Constants.ENCODING);
 
             File parent = new File(rootPath + File.separator + parentPath);
             File currentDirectory = new File(parent, name);
             boolean result = currentDirectory.mkdirs();
-            if(result == false) {
+            if (!result) {
                 redirectAttributes.addFlashAttribute(Constants.ERROR, "名称为[" + name + "]的文件/目录已经存在");
             } else {
                 redirectAttributes.addFlashAttribute(Constants.MESSAGE, "创建成功！");
@@ -378,7 +352,6 @@ public class OnlineEditorController extends BaseController {
         redirectAttributes.addAttribute("path", parentPath);
         return redirectToUrl(viewName("list"));
     }
-
 
     @RequestMapping("/create/file")
     public String createFile(
@@ -386,7 +359,7 @@ public class OnlineEditorController extends BaseController {
             @RequestParam(value = "name") String name,
             RedirectAttributes redirectAttributes) throws IOException {
 
-        if(isValidFileName(name)) {
+        if (isValidFileName(name)) {
             String rootPath = sc.getRealPath(ROOT_DIR);
             parentPath = URLDecoder.decode(parentPath, Constants.ENCODING);
 
@@ -394,7 +367,7 @@ public class OnlineEditorController extends BaseController {
             File currentFile = new File(parent, name);
             currentFile.getParentFile().mkdirs();
             boolean result = currentFile.createNewFile();
-            if(result == false) {
+            if (!result) {
                 redirectAttributes.addFlashAttribute(Constants.ERROR, "名称为[" + name + "]的文件/目录已经存在");
             } else {
                 redirectAttributes.addFlashAttribute(Constants.MESSAGE, "创建成功！");
@@ -406,7 +379,6 @@ public class OnlineEditorController extends BaseController {
         redirectAttributes.addAttribute("path", parentPath);
         return redirectToUrl(viewName("list"));
     }
-
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String showUploadForm(
@@ -417,7 +389,7 @@ public class OnlineEditorController extends BaseController {
         String rootPath = sc.getRealPath(ROOT_DIR);
         parentPath = URLDecoder.decode(parentPath, Constants.ENCODING);
         File parent = new File(rootPath + File.separator + parentPath);
-        if(!parent.exists()) {
+        if (!parent.exists()) {
             redirectAttributes.addFlashAttribute(Constants.ERROR, parentPath + "目录不存在！");
             redirectAttributes.addAttribute("path", "");
             return redirectToUrl(viewName("list"));
@@ -426,7 +398,6 @@ public class OnlineEditorController extends BaseController {
         model.addAttribute("parentPath", parentPath);
         return viewName("uploadForm");
     }
-
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
@@ -439,7 +410,6 @@ public class OnlineEditorController extends BaseController {
         String rootPath = sc.getRealPath(ROOT_DIR);
         parentPath = URLDecoder.decode(parentPath, Constants.ENCODING);
         File parent = new File(rootPath + File.separator + parentPath);
-
 
         //The file upload plugin makes use of an Iframe Transport module for browsers like Microsoft Internet Explorer and Opera, which do not yet support XMLHTTPRequest file uploads.
         response.setContentType("text/plain");
@@ -455,7 +425,7 @@ public class OnlineEditorController extends BaseController {
             long size = file.getSize();
             try {
                 File current = new File(parent, filename);
-                if(current.exists() && "ignore".equals(conflict)) {
+                if (current.exists() && "ignore".equals(conflict)) {
                     ajaxUploadResponse.add(filename, size, MessageUtils.message("upload.conflict.error"));
                     continue;
                 }
@@ -464,20 +434,20 @@ public class OnlineEditorController extends BaseController {
 
                 ajaxUploadResponse.add(filename, size, url, deleteURL);
 
-                continue;
+                //continue;
             } catch (IOException e) {
                 LogUtils.logError("file upload error", e);
                 ajaxUploadResponse.add(filename, size, MessageUtils.message("upload.server.error"));
-                continue;
+                //continue;
             } catch (InvalidExtensionException e) {
                 ajaxUploadResponse.add(filename, size, MessageUtils.message("upload.not.allow.extension"));
-                continue;
+                // continue;
             } catch (FileUploadBase.FileSizeLimitExceededException e) {
                 ajaxUploadResponse.add(filename, size, MessageUtils.message("upload.exceed.maxSize"));
-                continue;
+                // continue;
             } catch (FileNameLengthLimitExceededException e) {
                 ajaxUploadResponse.add(filename, size, MessageUtils.message("upload.filename.exceed.length"));
-                continue;
+                //continue;
             }
         }
         return ajaxUploadResponse;
@@ -498,14 +468,12 @@ public class OnlineEditorController extends BaseController {
 
     }
 
-
     //压缩
     @RequestMapping("compress")
     public String compress(
             @RequestParam(value = "parentPath") String parentPath,
             @RequestParam(value = "paths") String[] paths,
             RedirectAttributes redirectAttributes) throws IOException {
-
 
         String rootPath = sc.getRealPath(ROOT_DIR);
         parentPath = URLDecoder.decode(parentPath, Constants.ENCODING);
@@ -515,7 +483,7 @@ public class OnlineEditorController extends BaseController {
 
         String compressPath = parentPath + File.separator + "[系统压缩]" + DateFormatUtils.format(now, pattern) + "-" + System.nanoTime() + ".zip";
 
-        for(int i = 0, l = paths.length; i < l; i++) {
+        for (int i = 0, l = paths.length; i < l; i++) {
             String path = paths[i];
             path = URLDecoder.decode(path, Constants.ENCODING);
             paths[i] = rootPath + File.separator + path;
@@ -545,15 +513,14 @@ public class OnlineEditorController extends BaseController {
             @RequestParam(value = "conflict") String conflict,
             RedirectAttributes redirectAttributes) throws IOException {
 
-
         String rootPath = sc.getRealPath(ROOT_DIR);
         descPath = URLDecoder.decode(descPath, Constants.ENCODING);
 
-        for(int i = 0, l = paths.length; i < l; i++) {
+        for (int i = 0, l = paths.length; i < l; i++) {
             String path = paths[i];
             path = URLDecoder.decode(path, Constants.ENCODING);
             //只保留.zip的
-            if(!path.toLowerCase().endsWith(".zip")) {
+            if (!path.toLowerCase().endsWith(".zip")) {
                 continue;
             }
             paths[i] = rootPath + File.separator + path;
@@ -562,7 +529,7 @@ public class OnlineEditorController extends BaseController {
         try {
 
             String descAbsolutePath = rootPath + File.separator + descPath;
-            for(String path : paths) {
+            for (String path : paths) {
                 CompressUtils.unzip(path, descAbsolutePath, "override".equals(conflict));
             }
             redirectAttributes.addFlashAttribute(Constants.MESSAGE, "解压成功！");
@@ -574,7 +541,6 @@ public class OnlineEditorController extends BaseController {
         return redirectToUrl(viewName("list"));
     }
 
-
     @RequestMapping("move")
     public String move(
             @RequestParam(value = "descPath") String descPath,
@@ -582,11 +548,10 @@ public class OnlineEditorController extends BaseController {
             @RequestParam(value = "conflict") String conflict,
             RedirectAttributes redirectAttributes) throws IOException {
 
-
         String rootPath = sc.getRealPath(ROOT_DIR);
         descPath = URLDecoder.decode(descPath, Constants.ENCODING);
 
-        for(int i = 0, l = paths.length; i < l; i++) {
+        for (int i = 0, l = paths.length; i < l; i++) {
             String path = paths[i];
             path = URLDecoder.decode(path, Constants.ENCODING);
             paths[i] = (rootPath + File.separator + path).replace("\\", "/");
@@ -594,16 +559,16 @@ public class OnlineEditorController extends BaseController {
 
         try {
             File descPathFile = new File(rootPath + File.separator + descPath);
-            for(String path : paths) {
+            for (String path : paths) {
                 File sourceFile = new File(path);
                 File descFile = new File(descPathFile, sourceFile.getName());
-                if(descFile.exists() && "ignore".equals(conflict)) {
+                if (descFile.exists() && "ignore".equals(conflict)) {
                     continue;
                 }
 
                 FileUtils.deleteQuietly(descFile);
 
-                if(sourceFile.isDirectory()) {
+                if (sourceFile.isDirectory()) {
                     FileUtils.moveDirectoryToDirectory(sourceFile, descPathFile, true);
                 } else {
                     FileUtils.moveFileToDirectory(sourceFile, descPathFile, true);
@@ -619,8 +584,6 @@ public class OnlineEditorController extends BaseController {
         return redirectToUrl(viewName("list"));
     }
 
-
-
     @RequestMapping("copy")
     public String copy(
             @RequestParam(value = "descPath") String descPath,
@@ -628,11 +591,10 @@ public class OnlineEditorController extends BaseController {
             @RequestParam(value = "conflict") String conflict,
             RedirectAttributes redirectAttributes) throws IOException {
 
-
         String rootPath = sc.getRealPath(ROOT_DIR);
         descPath = URLDecoder.decode(descPath, Constants.ENCODING);
 
-        for(int i = 0, l = paths.length; i < l; i++) {
+        for (int i = 0, l = paths.length; i < l; i++) {
             String path = paths[i];
             path = URLDecoder.decode(path, Constants.ENCODING);
             paths[i] = (rootPath + File.separator + path).replace("\\", "/");
@@ -640,16 +602,16 @@ public class OnlineEditorController extends BaseController {
 
         try {
             File descPathFile = new File(rootPath + File.separator + descPath);
-            for(String path : paths) {
+            for (String path : paths) {
                 File sourceFile = new File(path);
                 File descFile = new File(descPathFile, sourceFile.getName());
-                if(descFile.exists() && "ignore".equals(conflict)) {
+                if (descFile.exists() && "ignore".equals(conflict)) {
                     continue;
                 }
 
                 FileUtils.deleteQuietly(descFile);
 
-                if(sourceFile.isDirectory()) {
+                if (sourceFile.isDirectory()) {
                     FileUtils.copyDirectoryToDirectory(sourceFile, descPathFile);
                 } else {
                     FileUtils.copyFileToDirectory(sourceFile, descPathFile);
@@ -665,6 +627,17 @@ public class OnlineEditorController extends BaseController {
         return redirectToUrl(viewName("list"));
     }
 
+    private boolean isExclude(String[] excludePaths, String path) {
+        if (excludePaths == null) {
+            return false;
+        }
+        for (String excludePath : excludePaths) {
+            if (path.equals(excludePath)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private boolean isValidFileName(String fileName) {
         return fileName.matches(VALID_FILENAME_PATTERN);

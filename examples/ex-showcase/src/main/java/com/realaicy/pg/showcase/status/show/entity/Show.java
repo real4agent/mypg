@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.status.show.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -14,9 +9,15 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-4 上午9:38
- * <p>Version: 1.0
+ * 实体：显示状态
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "showcase_status_show")
@@ -45,6 +46,5 @@ public class Show extends BaseEntity<Long> implements Stateable<Stateable.ShowSt
     public void setName(String name) {
         this.name = name;
     }
-
 
 }

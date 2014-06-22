@@ -593,6 +593,7 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework</groupId>
@@ -737,11 +738,24 @@
                 <version>${jstl.version}</version>
             </dependency>
 
+
             <dependency>
                 <groupId>com.realaicy.pangoo</groupId>
                 <artifactId>pangoo-core</artifactId>
                 <version>${pangoo.core.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.realaicy.pangoo</groupId>
+                <artifactId>pangoo-extension</artifactId>
+                <version>${pangoo.extension.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.realaicy.pangoo</groupId>
+                <artifactId>pangoo-test</artifactId>
+                <version>${pangoo.test.version}</version>
+                <scope>test</scope>
+            </dependency>
+
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
@@ -998,7 +1012,10 @@
         <support.basedir>${project.parent.basedir}/src/support</support.basedir>
         <site.basedir>${project.parent.basedir}</site.basedir>
 
-        <pangoo.core.version>0.9.6</pangoo.core.version>
+        <pangoo.core.version>0.9.7</pangoo.core.version>
+        <pangoo.extension.version>0.9.7</pangoo.extension.version>
+        <pangoo.test.version>0.9.7</pangoo.test.version>
+
 
         <poi.version>3.9</poi.version>
         <spring.version>3.2.8.RELEASE</spring.version>

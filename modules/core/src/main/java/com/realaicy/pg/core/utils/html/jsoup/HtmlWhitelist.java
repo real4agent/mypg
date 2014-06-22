@@ -41,7 +41,7 @@ import java.util.Set;
  * <p/>
  * If you are going to extend a whitelist, please be very careful. Make sure you understand what attributes may lead to
  * XSS attack vectors. URL attributes are particularly vulnerable and require careful validation. See
- * http://ha.ckers.org/xss.html for some XSS attack examples.
+ * http://ha.ckers.org/xss.html for some XSS attack demo.
  *
  * @author Jonathan Hedley
  */

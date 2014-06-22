@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.excel.service;
 
 import com.google.common.collect.Lists;
@@ -50,34 +45,34 @@ import java.io.*;
 import java.util.*;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-4 下午3:01
- * <p>Version: 1.0
+ * SD-JPA-Service：Excel
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Service
 public class ExcelDataService extends BaseService<ExcelData, Long> {
 
     private final Logger log = LoggerFactory.getLogger(ExcelDataService.class);
-
-    private int batchSize = 1000; //批处理大小
-    private int pageSize = 1000;//查询时每页大小
-
-
     /**
      * 导出文件的最大大小 超过这个大小会压缩
      */
     private final int MAX_EXPORT_FILE_SIZE = 10 * 1024 * 1024; //10MB
-
-
+    private final String storePath = "upload/excel";
+    private final String EXPORT_FILENAME_PREFIX = "excel";
+    private int batchSize = 1000; //批处理大小
+    private int pageSize = 1000;//查询时每页大小
     @Autowired
     @BaseComponent
     private ExcelDataRepository excelDataRepository;
-
     @Autowired
     private NotificationApi notificationApi;
-
-    private final String storePath = "upload/excel";
-    private final String EXPORT_FILENAME_PREFIX = "excel";
 
     public void setNotificationApi(final NotificationApi notificationApi) {
         this.notificationApi = notificationApi;
@@ -93,7 +88,7 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
         excelDataRepository.truncate();
 
         final int ONE_MILLION = 1000000; //100w
-        for(int i = batchSize; i <= ONE_MILLION; i += batchSize) {
+        for (int i = batchSize; i <= ONE_MILLION; i += batchSize) {
             //不能使用AopContext.currentProxy() 因为task:annotation-driven没有暴露proxy。。
             proxy.doBatchSave(i - batchSize);
         }
@@ -107,8 +102,8 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
     }
 
     public void doBatchSave(final int fromId) {
-        for(int i = 1; i <= batchSize; i++) {
-            Long id = Long.valueOf(fromId + i);
+        for (int i = 1; i <= batchSize; i++) {
+            Long id = (long) (fromId + i);
             String content = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
             excelDataRepository.save(id, content);
         }
@@ -116,12 +111,11 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
     /**
      * 如果主键冲突 覆盖，否则新增
-     * @param dataList
      */
     public void doBatchSave(final List<ExcelData> dataList) {
-        for(ExcelData data : dataList) {
+        for (ExcelData data : dataList) {
             ExcelData dbData = findOne(data.getId());
-            if(dbData == null) {
+            if (dbData == null) {
                 excelDataRepository.save(data.getId(), data.getContent());
             } else {
                 dbData.setContent(data.getContent());
@@ -132,13 +126,11 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
     /**
      * csv格式
-     * @param user
-     * @param is
      */
     @Async
     public void importCvs(final User user, final InputStream is) {
 
-        ExcelDataService proxy = ((ExcelDataService)AopContext.currentProxy());
+        ExcelDataService proxy = ((ExcelDataService) AopContext.currentProxy());
         BufferedInputStream bis = null;
         try {
             long beginTime = System.currentTimeMillis();
@@ -181,7 +173,7 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
                 }
             }
 
-            if(dataList.size() > 0) {
+            if (dataList.size() > 0) {
                 proxy.doBatchSave(dataList);
             }
 
@@ -203,13 +195,11 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
     /**
      * 导入 excel 2003 biff格式
      * 如果是xml格式的 可以使用SAX（未测试）
-     * @param user
-     * @param is
      */
     @Async
     public void importExcel2003(final User user, final InputStream is) {
 
-        ExcelDataService proxy = ((ExcelDataService)AopContext.currentProxy());
+        ExcelDataService proxy = ((ExcelDataService) AopContext.currentProxy());
 
         BufferedInputStream bis = null;
         InputStream dis = null;
@@ -233,7 +223,6 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
             HSSFEventFactory factory = new HSSFEventFactory();
             // 根据文档输入流处理事件
             factory.processEvents(req, dis);
-
 
             //把最后剩下的不足batchSize大小
             if (dataList.size() > 0) {
@@ -261,7 +250,7 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
     @Async
     public void importExcel2007(final User user, final InputStream is) {
 
-        ExcelDataService proxy = ((ExcelDataService)AopContext.currentProxy());
+        ExcelDataService proxy = ((ExcelDataService) AopContext.currentProxy());
 
         BufferedInputStream bis = null;
         try {
@@ -285,8 +274,6 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
                     sheet = sheets.next();
                     InputSource sheetSource = new InputSource(sheet);
                     parser.parse(sheetSource);
-                } catch (Exception e) {
-                    throw e;
                 } finally {
                     IOUtils.closeQuietly(sheet);
                 }
@@ -315,7 +302,7 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
     public void exportCvs(final User user, final String contextRootPath, final Searchable searchable) {
         String encoding = "gbk";
         int perSheetRows = 60000; //每个sheet 6w条
-        int totalRows = 0;
+        int totalRows;
         String separator = ",";
         Long maxId = 0L;
 
@@ -330,11 +317,11 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
             while (true) {
                 totalRows = 0;
-                Page<ExcelData> page = null;
+                Page<ExcelData> page;
                 do {
                     searchable.setPage(0, pageSize);
                     //优化分页性能
-                    if(!searchable.containsSearchKey("id_in")) {
+                    if (!searchable.containsSearchKey("id_in")) {
                         searchable.addSearchFilter("id", SearchOperator.gt, maxId);
                     }
                     page = findAll(searchable);
@@ -357,7 +344,7 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
             IOUtils.closeQuietly(out);
 
-            if(needCompress(file)) {
+            if (needCompress(file)) {
                 fileName = compressAndDeleteOriginal(fileName);
             }
 
@@ -381,21 +368,17 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
      * 1、给用户一个vbs 脚本合并
      * 2、给用户写一个c#程序合并
      * 不想这么麻烦 需要时再写吧，还不如直接让用户装office 2007 更简单。
-     * @param user
-     * @param contextRootPath
-     * @param searchable
      */
     @Async
     public void exportExcel2003WithOneSheetPerWorkBook(final User user, final String contextRootPath, final Searchable searchable) {
         int workbookCount = 0;
         List<String> workbookFileNames = new ArrayList<String>();
         int perSheetRows = 60000; //每个sheet 6w条
-        int totalRows = 0;
+        int totalRows;
         String extension = "xls";
 
         int pageSize = 1000;
         Long maxId = 0L;
-
 
         BufferedOutputStream out = null;
         try {
@@ -417,12 +400,12 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
                 totalRows = 1;
 
-                Page<ExcelData> page = null;
+                Page<ExcelData> page;
 
                 do {
                     searchable.setPage(0, pageSize);
                     //优化分页性能
-                    if(!searchable.containsSearchKey("id_in")) {
+                    if (!searchable.containsSearchKey("id_in")) {
                         searchable.addSearchFilter("id", SearchOperator.gt, maxId);
                     }
                     page = findAll(searchable);
@@ -450,11 +433,12 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
                 }
             }
 
-            String fileName =  workbookFileNames.get(0);
+            String fileName = workbookFileNames.get(0);
             if (workbookCount > 1 || needCompress(new File(fileName))) {
                 fileName = fileName.substring(0, fileName.lastIndexOf("_")) + ".zip";
                 //去掉索引
-                compressAndDeleteOriginal(fileName, workbookFileNames.toArray(new String[0]));
+                //compressAndDeleteOriginal(fileName, workbookFileNames.toArray(new String[0]));
+                compressAndDeleteOriginal(fileName, workbookFileNames.toArray(new String[workbookFileNames.size()]));
             } else {
                 String newFileName = fileName.substring(0, fileName.lastIndexOf("_")) + "." + extension;
                 FileUtils.moveFile(new File(fileName), new File(newFileName));
@@ -487,17 +471,13 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
      * 生成的文件巨大。。
      * <p/>
      * 还一种是写html（缺点不支持多sheet）
-     * @param user
-     * @param contextRootPath
-     * @param searchable
      */
     @Async
     public void exportExcel2003WithXml(final User user, final String contextRootPath, final Searchable searchable) {
 
-
         int perSheetRows = 60000; //每个sheet 6w条
         int totalSheets = 0;
-        int totalRows = 0;
+        int totalRows;
         Long maxId = 0L;
         String templateEncoding = "utf-8";
 
@@ -522,13 +502,13 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
                 out.write(sheetHeader.replace("{sheetName}", "Sheet" + totalSheets).getBytes(templateEncoding));
 
-                Page<ExcelData> page = null;
+                Page<ExcelData> page;
 
                 totalRows = 1;
                 do {
                     searchable.setPage(0, pageSize);
                     //优化分页性能
-                    if(!searchable.containsSearchKey("id_in")) {
+                    if (!searchable.containsSearchKey("id_in")) {
                         searchable.addSearchFilter("id", SearchOperator.gt, maxId);
                     }
                     page = findAll(searchable);
@@ -577,14 +557,11 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
      * excel 2003
      * 不支持大数据量
      * 每个sheet最多65536行(因为是usermodel模型，数据先写到内存 最后flush出去 不支持大数据量导出)
-     * @param user
-     * @param contextRootPath
-     * @param searchable
      */
     @Async
     public void exportExcel2003WithUsermodel(final User user, final String contextRootPath, final Searchable searchable) {
         int perSheetRows = 60000; //每个sheet 6w条
-        int totalRows = 0;
+        int totalRows;
         Long maxId = 0L;
 
         String fileName = generateFilename(user, contextRootPath, "xls");
@@ -603,11 +580,11 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
                 contentHeaderCell.setCellValue("内容");
 
                 totalRows = 1;
-                Page<ExcelData> page = null;
+                Page<ExcelData> page;
                 do {
                     searchable.setPage(0, pageSize);
                     //优化分页性能
-                    if(!searchable.containsSearchKey("id_in")) {
+                    if (!searchable.containsSearchKey("id_in")) {
                         searchable.addSearchFilter("id", SearchOperator.gt, maxId);
                     }
                     page = findAll(searchable);
@@ -635,7 +612,7 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
             IOUtils.closeQuietly(out);
 
-            if(needCompress(file)) {
+            if (needCompress(file)) {
                 fileName = compressAndDeleteOriginal(fileName);
             }
 
@@ -654,20 +631,16 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
         }
     }
 
-
     /**
      * 支持大数据量导出
      * excel 2007 每个sheet最多1048576行
-     * @param user
-     * @param contextRootPath
-     * @param searchable
      */
     @Async
     public void exportExcel2007(final User user, final String contextRootPath, final Searchable searchable) {
 
         int rowAccessWindowSize = 1000; //内存中保留的行数，超出后会写到磁盘
         int perSheetRows = 100000; //每个sheet 10w条
-        int totalRows = 0; //统计总行数
+        int totalRows; //统计总行数
         Long maxId = 0L;//当前查询的数据中最大的id 优化分页的
 
         String fileName = generateFilename(user, contextRootPath, "xlsx");
@@ -691,12 +664,12 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
                 totalRows = 1;
 
-                Page<ExcelData> page = null;
+                Page<ExcelData> page;
 
                 do {
                     searchable.setPage(0, pageSize);
                     //优化分页性能
-                    if(!searchable.containsSearchKey("id_in")) {
+                    if (!searchable.containsSearchKey("id_in")) {
                         searchable.addSearchFilter("id", SearchOperator.gt, maxId);
                     }
                     page = findAll(searchable);
@@ -745,10 +718,6 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
         }
     }
 
-
-
-
-
     private String compressAndDeleteOriginal(final String filename) {
         String newFileName = FilenameUtils.removeExtension(filename) + ".zip";
         compressAndDeleteOriginal(newFileName, filename);
@@ -757,7 +726,7 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
     private void compressAndDeleteOriginal(final String newFileName, final String... needCompressFilenames) {
         CompressUtils.zip(newFileName, needCompressFilenames);
-        for(String needCompressFilename : needCompressFilenames) {
+        for (String needCompressFilename : needCompressFilenames) {
             FileUtils.deleteQuietly(new File(needCompressFilename));
         }
     }
@@ -768,14 +737,11 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
 
     /**
      * 生成要导出的文件名
-     * @param user
-     * @param contextRootPath
-     * @param extension
-     * @return
      */
     private String generateFilename(final User user, final String contextRootPath, final String extension) {
         return generateFilename(user, contextRootPath, null, extension);
     }
+
     private String generateFilename(final User user, final String contextRootPath, Integer index, final String extension) {
         String path = FilenameUtils.concat(contextRootPath, storePath);
         path = FilenameUtils.concat(path, user.getUsername());
@@ -787,9 +753,9 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
                         "." + extension);
 
         File file = new File(path);
-        if(!file.exists()) {
+        if (!file.exists()) {
             File parentFile = file.getParentFile();
-            if(!parentFile.exists()) {
+            if (!parentFile.exists()) {
                 parentFile.mkdirs();
             }
             return path;

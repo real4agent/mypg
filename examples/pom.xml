@@ -11,6 +11,7 @@
     <modules>
         <module>ex-parent</module>
         <module>ex-showcase</module>
+        <module>demo</module>
     </modules>
 
     <properties>

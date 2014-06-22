@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.move.web.controller;
 
 import com.realaicy.pg.core.entity.enums.BooleanEnum;
@@ -23,9 +18,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-1-28 下午4:29
- * <p>Version: 1.0
+ * SD-JPA-Controller：移动
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "/showcase/move")
@@ -42,7 +44,6 @@ public class MoveController extends BaseMovableController<Move, Long> {
     public void setCommonData(Model model) {
         model.addAttribute("booleanList", BooleanEnum.values());
     }
-
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     @Override

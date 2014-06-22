@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.monitor.web.controller;
 
 import com.realaicy.pg.core.Constants;
@@ -34,9 +29,15 @@ import java.io.StringWriter;
 import java.util.regex.Pattern;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-1 下午2:39
- * <p>Version: 1.0
+ * JPAQL命令执行控制器
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping("/admin/monitor/db")
@@ -48,7 +49,6 @@ public class JPAQLExecutorController extends BaseController {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
-
 
     @RequestMapping(value = "/ql", method = RequestMethod.GET)
     public String showQLForm() {
@@ -66,6 +66,7 @@ public class JPAQLExecutorController extends BaseController {
 
         try {
             new TransactionTemplate(transactionManager).execute(new TransactionCallback<Void>() {
+                @SuppressWarnings("unchecked")
                 @Override
                 public Void doInTransaction(TransactionStatus status) {
                     //1首先尝试执行ql更新
@@ -74,7 +75,7 @@ public class JPAQLExecutorController extends BaseController {
                         int updateCount = query.executeUpdate();
                         model.addAttribute("updateCount", updateCount);
                         return null;
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                     //2如果失败 尝试执行ql查询
                     String findQL = ql;

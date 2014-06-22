@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.notification.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -17,9 +12,15 @@ import javax.validation.constraints.NotNull;
 
 /**
  * 消息通知模板
- * <p>User: Zhang Kaitao
- * <p>Date: 13-7-8 下午2:15
- * <p>Version: 1.0
+ * 实体：消息通知模板
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "maintain_notification_template")
@@ -29,7 +30,7 @@ public class NotificationTemplate extends BaseEntity<Long> implements LogicDelet
      * 模板名称 必须唯一 发送时使用
      */
     @NotNull(message = "{not.null}")
-    @Length(min=1, max=100, message = "{length.not.valid}")
+    @Length(min = 1, max = 100, message = "{length.not.valid}")
     private String name;
 
     /**
@@ -39,13 +40,11 @@ public class NotificationTemplate extends BaseEntity<Long> implements LogicDelet
     @Enumerated(EnumType.STRING)
     private NotificationSystem system;
 
-
     /**
      * 模板标题
      */
-    @Length(min=1, max=200, message = "{length.not.valid}")
+    @Length(min = 1, max = 200, message = "{length.not.valid}")
     private String title;
-
 
     /**
      * 模板内容

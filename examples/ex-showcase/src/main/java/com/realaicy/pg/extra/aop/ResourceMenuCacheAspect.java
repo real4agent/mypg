@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.extra.aop;
 
 import com.realaicy.pg.core.cache.BaseCacheAspect;
@@ -16,9 +11,14 @@ import org.springframework.stereotype.Component;
 
 /**
  * 缓存及清理菜单缓存
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-16 下午3:49
- * <p>Version: 1.0
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Component
 @Aspect
@@ -26,21 +26,6 @@ public class ResourceMenuCacheAspect extends BaseCacheAspect {
 
     public ResourceMenuCacheAspect() {
         setCacheName("sys-menuCache");
-    }
-
-    private String menusKeyPrefix = "menus-";
-
-
-    @Pointcut(value = "target(com.realaicy.pg.sys.resource.service.ResourceService)")
-    private void resourceServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* save(..)) || execution(* update(..)) || execution(* delete(..))")
-    private void resourceCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "execution(* findMenus(*)) && args(arg)", argNames = "arg")
-    private void resourceCacheablePointcut(User arg) {
     }
 
     @Before(value = "resourceServicePointcut() && resourceCacheEvictAllPointcut()")
@@ -51,9 +36,7 @@ public class ResourceMenuCacheAspect extends BaseCacheAspect {
     @Around(value = "resourceServicePointcut() && resourceCacheablePointcut(arg)", argNames = "pjp,arg")
     public Object findRolesCacheableAdvice(ProceedingJoinPoint pjp, User arg) throws Throwable {
 
-        User user = arg;
-
-        String key = menusKey(user.getId());
+        String key = menusKey(arg.getId());
         Object retVal = get(key);
 
         if (retVal != null) {
@@ -69,15 +52,25 @@ public class ResourceMenuCacheAspect extends BaseCacheAspect {
         return retVal;
     }
 
-
     public void evict(Long userId) {
         evict(menusKey(userId));
     }
 
-
-    private String menusKey(Long userId) {
-        return this.menusKeyPrefix + userId;
+    @Pointcut(value = "target(com.realaicy.pg.sys.resource.service.ResourceService)")
+    private void resourceServicePointcut() {
     }
 
+    @Pointcut(value = "execution(* save(..)) || execution(* update(..)) || execution(* delete(..))")
+    private void resourceCacheEvictAllPointcut() {
+    }
+
+    @Pointcut(value = "execution(* findMenus(*)) && args(arg)", argNames = "arg")
+    private void resourceCacheablePointcut(User arg) {
+    }
+
+    private String menusKey(Long userId) {
+        String menusKeyPrefix = "menus-";
+        return menusKeyPrefix + userId;
+    }
 
 }

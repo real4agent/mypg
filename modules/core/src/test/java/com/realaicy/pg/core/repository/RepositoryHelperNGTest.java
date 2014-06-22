@@ -240,7 +240,7 @@ public class RepositoryHelperNGTest extends BaseUserNGTest {
 
         Searchable searchable = Searchable.newSearchable();
 
-        searchable.addSearchParam("realname", "zhang");
+        searchable.addSearchParam("realname", "liu");
         searchable.addSearchParam("id_lt", user4.getId());
 
         searchable.setPage(0, 2);
@@ -293,7 +293,7 @@ public class RepositoryHelperNGTest extends BaseUserNGTest {
 
         Searchable searchable = Searchable.newSearchable();
 
-        searchable.addSearchParam("realname", "zhang");
+        searchable.addSearchParam("realname", "liu");
         searchable.addSearchParam("id_lt", user4.getId());
 
         searchable.setPage(0, 2);
@@ -375,7 +375,7 @@ public class RepositoryHelperNGTest extends BaseUserNGTest {
 
         Searchable searchable = Searchable.newSearchable();
 
-        searchable.addSearchParam("realname", "zhang");
+        searchable.addSearchParam("realname", "liu");
         searchable.addSearchParam("id_lt", user4.getId());
 
         searchable.setPage(0, 2);
@@ -425,7 +425,7 @@ public class RepositoryHelperNGTest extends BaseUserNGTest {
 
         Searchable searchable = Searchable.newSearchable();
 
-        searchable.addSearchParam("realname", "zhang");
+        searchable.addSearchParam("realname", "liu");
         searchable.addSearchParam("id_lt", user4.getId());
 
         searchable.setPage(0, 2);

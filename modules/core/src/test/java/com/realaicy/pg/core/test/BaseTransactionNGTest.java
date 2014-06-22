@@ -1,8 +1,8 @@
 package com.realaicy.pg.core.test;
 
-import com.realaicy.pg.core.test.spring.SpringTransactionalNGTestCase;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import javax.persistence.EntityManager;
@@ -21,7 +21,7 @@ import javax.persistence.PersistenceContext;
  */
 @ContextConfiguration({"classpath:spring-common.xml", "classpath:spring-test.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
-public abstract class BaseTransactionNGTest extends SpringTransactionalNGTestCase {
+public abstract class BaseTransactionNGTest extends AbstractTransactionalTestNGSpringContextTests {
 
     @PersistenceContext
     protected EntityManager entityManager;

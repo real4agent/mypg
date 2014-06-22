@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.editor.service;
 
 import com.realaicy.pg.core.inject.annotation.BaseComponent;
@@ -13,9 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-2-4 下午3:01
- * <p>Version: 1.0
+ * SD-JPA-Service：编辑器
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Service
 public class EditorService extends BaseService<Editor, Long> {
@@ -23,6 +25,5 @@ public class EditorService extends BaseService<Editor, Long> {
     @Autowired
     @BaseComponent
     private EditorRepository sampleRepository;
-
 
 }

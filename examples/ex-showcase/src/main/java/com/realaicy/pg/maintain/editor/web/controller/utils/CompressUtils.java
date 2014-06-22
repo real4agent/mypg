@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.editor.web.controller.utils;
 
 import com.google.common.collect.Lists;
@@ -18,13 +13,19 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-6-14 下午3:37
- * <p>Version: 1.0
+ * 文件压缩辅助类
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 public class CompressUtils {
 
-    public static final void zip(String compressPath, String[] needCompressPaths) {
+    public static void zip(String compressPath, String[] needCompressPaths) {
         File compressFile = new File(compressPath);
 
         List<File> files = Lists.newArrayList();
@@ -46,8 +47,6 @@ public class CompressUtils {
                     addFilesToCompression(zaos, file, "");
                 }
 
-            } catch (IOException e) {
-                throw e;
             } finally {
                 IOUtils.closeQuietly(zaos);
             }
@@ -68,8 +67,6 @@ public class CompressUtils {
                 bis = new BufferedInputStream(new FileInputStream(file));
                 IOUtils.copy(bis, zaos);
                 zaos.closeArchiveEntry();
-            } catch (IOException e) {
-                throw e;
             } finally {
                 IOUtils.closeQuietly(bis);
             }
@@ -84,14 +81,10 @@ public class CompressUtils {
 
     public static void unzip(String path, String descPath, boolean override) {
         File uncompressFile = new File(path);
-        File descPathFile = null;
+        File descPathFile;
 
-        try {
-            descPathFile = new File(descPath);
-            unzipFolder(uncompressFile, descPathFile, override);
-        } catch (RuntimeException e) {
-            throw e;
-        }
+        descPathFile = new File(descPath);
+        unzipFolder(uncompressFile, descPathFile, override);
     }
 
     @SuppressWarnings("unchecked")
@@ -110,11 +103,11 @@ public class CompressUtils {
                 File currentFile = new File(descPathFile, name);
 
                 //非覆盖 跳过
-                if(currentFile.isFile() && currentFile.exists() && !override) {
+                if (currentFile.isFile() && currentFile.exists() && !override) {
                     continue;
                 }
 
-                if(name.endsWith("/")) {
+                if (name.endsWith("/")) {
                     currentFile.mkdirs();
                     continue;
                 } else {
@@ -136,13 +129,12 @@ public class CompressUtils {
             if (zipFile != null) {
                 try {
                     zipFile.close();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
         }
 
     }
-
 
     public static void main(String[] args) {
 //        String[] needCompressFilePath = new String[]{

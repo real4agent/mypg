@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.extra.aop;
 
 import com.realaicy.pg.core.cache.BaseCacheAspect;
@@ -85,25 +80,24 @@ import java.util.Arrays;
  * 此方法的一个缺点就是 只要改了一个，所有缓存失效。。。。
  * TODO 思考更好的做法？
  * <p/>
- * <p>User: Zhang Kaitao
- * <p>Date: 13-5-15 下午2:16
- * <p>Version: 1.0
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Component
 @Aspect
 public class UserAuthCacheAspect extends BaseCacheAspect {
 
-    public UserAuthCacheAspect() {
-        setCacheName("sys-authCache");
-    }
-
     private String rolesKeyPrefix = "roles-";
     private String stringRolesKeyPrefix = "string-roles-";
     private String stringPermissionsKeyPrefix = "string-permissions-";
-
     @Autowired
     private ResourceMenuCacheAspect resourceMenuCacheAspect;
-
     @Autowired
     private AuthService authService;
     @Autowired
@@ -123,192 +117,13 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
     @Autowired
     private UserService userService;
 
+    public UserAuthCacheAspect() {
+        setCacheName("sys-authCache");
+    }
 
     ////////////////////////////////////////////////////////////////////////////////
     ////切入点
     ////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * 2、授权（Auth）
-     * 当增删改授权时，
-     * 如果是用户相关的，只删用户的即可，
-     * 其他的全部清理
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.auth.service.AuthService)")
-    private void authServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* addGroupAuth(..)) " +
-            "|| execution(* addOrganizationJobAuth(..)) " +
-            "|| execution(* addOrganizationJobAuth(..))")
-    private void authCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "(execution(* addUserAuth(*,..)) && args(arg, ..)) " +
-            "|| (execution(* update(*)) && args(arg)) " +
-            "|| (execution(* save(*)) && args(arg)) " +
-            "|| (execution(* delete(*)) && args(arg))",
-            argNames = "arg")
-    private void authCacheEvictAllOrSpecialPointcut(Object arg) {
-    }
-
-
-    /**
-     * 3.1、资源（Resource）
-     * 当修改资源时判断是否发生变化（如resourceIdentity，是否显示），如果变了清缓存
-     * 当删除资源时，清缓存
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.resource.service.ResourceService)")
-    private void resourceServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* delete(..))")
-    private void resourceCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
-    private void resourceMaybeCacheEvictAllPointcut(Resource arg) {
-    }
-
-    /**
-     * 3.2、权限（Permission）
-     * 当修改权限时判断是否发生变化（如permission，是否显示），如果变了清缓存
-     * 当删除权限时，清缓存
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.permission.service.PermissionService)")
-    private void permissionServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* delete(..))")
-    private void permissionCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
-    private void permissionMaybeCacheEvictAllPointcut(Permission arg) {
-    }
-
-
-    /**
-     * 4、角色（Role）
-     * 当删除角色时，请缓存
-     * 当修改角色show/role/resourcePermissions关系时，清缓存
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.permission.service.RoleService)")
-    private void roleServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* delete(..))")
-    private void roleCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
-    private void roleMaybeCacheEvictAllPointcut(Role arg) {
-    }
-
-
-    /**
-     * 5.1、组织机构
-     * 当删除/修改show字段时，清缓存
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.organization.service.OrganizationService)")
-    private void organizationServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* delete(..))")
-    private void organizationCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
-    private void organizationMaybeCacheEvictAllPointcut(Organization arg) {
-    }
-
-    /**
-     * 5.2、工作职务
-     * 当删除/修改show字段时，清缓存
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.organization.service.JobService)")
-    private void jobServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* delete(..))")
-    private void jobCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
-    private void jobMaybeCacheEvictAllPointcut(Job arg) {
-    }
-
-
-    /**
-     * 6。1、组
-     * 当修改组的默认组/show时，清缓存
-     * 当删除组时，清缓存
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.group.service.GroupService)")
-    private void groupServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* delete(..))")
-    private void groupCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
-    private void groupMaybeCacheEvictAllPointcut(Group arg) {
-    }
-
-    /**
-     * 6.2、当删除组关系时
-     * 当添加/修改/删除的是某个用户的，只清理这个用户的缓存
-     * 其他情况，清所有
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.group.service.GroupRelationService)")
-    private void groupRelationServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* appendRelation(*,*))")
-    private void groupRelationCacheEvictAllPointcut() {
-    }
-
-    @Pointcut(value = "(execution(* delete(*)) && args(arg)) " +
-            "|| (execution(* update(*)) && args(arg)) " +
-            "|| execution(* appendRelation(*,*,*,*)) && args(*,arg,*,*) ", argNames = "arg")
-    private void groupRelationMaybeCacheEvictAllOrSpecialPointcut(Object arg) {
-    }
-
-
-    /**
-     * 7、用户
-     * 修改时，如果组织机构/工作职务变了，仅需清自己的缓存
-     */
-    @Pointcut(value = "target(com.realaicy.pg.sys.user.service.UserService)")
-    private void userServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* delete(*)) && args(arg) || execution(* update(*)) && args(arg)", argNames = "arg")
-    private void userCacheEvictSpecialPointcut(Object arg) {
-    }
-
-
-    @Pointcut(value = "target(com.realaicy.pg.sys.auth.service.UserAuthService)")
-    private void userAuthServicePointcut() {
-    }
-
-    @Pointcut(value = "execution(* findRoles(*)) && args(arg)", argNames = "arg")
-    private void cacheFindRolesPointcut(User arg) {
-    }
-
-    @Pointcut(value = "execution(* findStringRoles(*)) && args(arg)", argNames = "arg")
-    private void cacheFindStringRolesPointcut(User arg) {
-    }
-
-    @Pointcut(value = "execution(* findStringPermissions(*)) && args(arg)", argNames = "arg")
-    private void cacheFindStringPermissionsPointcut(User arg) {
-    }
-
-
-    //////////////////////////////////////////////////////////////////////////////////
-    ////增强
-    //////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////////
     ////查询时 查缓存/加缓存
@@ -340,11 +155,10 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
 
     @Around(value = "userAuthServicePointcut() && cacheFindStringRolesPointcut(arg)", argNames = "pjp,arg")
     public Object findStringRolesCacheableAdvice(ProceedingJoinPoint pjp, User arg) throws Throwable {
-        User user = arg;
 
         String key = null;
-        if (user != null) {
-            key = stringRolesKey(user.getId());
+        if (arg != null) {
+            key = stringRolesKey(arg.getId());
         }
 
         Object retVal = get(key);
@@ -362,12 +176,10 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
         return retVal;
     }
 
-
     @Around(value = "userAuthServicePointcut() && cacheFindStringPermissionsPointcut(arg)", argNames = "pjp,arg")
     public Object findStringPermissionsCacheableAdvice(ProceedingJoinPoint pjp, User arg) throws Throwable {
-        User user = arg;
 
-        String key = stringPermissionsKey(user.getId());
+        String key = stringPermissionsKey(arg.getId());
 
         Object retVal = get(key);
 
@@ -400,28 +212,6 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
     public void cacheClearAllAdvice() {
         log.debug("cacheName:{}, method:cacheClearAllAdvice, cache clear", cacheName);
         clear();
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////
-    ////可能清空特定/全部缓存
-    //////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @param auth
-     * @return 如果清空所有返回true 否则false
-     */
-    private boolean evictWithAuth(Auth auth) {
-        boolean needEvictSpecail = auth != null && auth.getUserId() != null && auth.getGroupId() == null && auth.getOrganizationId() == null;
-        if (needEvictSpecail) {
-            Long userId = auth.getUserId();
-            log.debug("cacheName:{}, method:evictWithAuth, evict userId:{}", cacheName, userId);
-            evict(userId);
-            return false;
-        } else {
-            log.debug("cacheName:{}, method:evictWithAuth, cache clear", cacheName);
-            clear();
-            return true;
-        }
     }
 
     @Before(value = "authServicePointcut() && authCacheEvictAllOrSpecialPointcut(arg)", argNames = "jp,arg")
@@ -459,21 +249,19 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
         }
     }
 
-
     @Before(value = "resourceServicePointcut() && resourceMaybeCacheEvictAllPointcut(arg)", argNames = "arg")
     public void resourceMaybeCacheClearAllAdvice(Resource arg) {
-        Resource resource = arg;
-        if (resource == null) {
+        if (arg == null) {
             return;
         }
-        Resource dbResource = resourceService.findOne(resource.getId());
+        Resource dbResource = resourceService.findOne(arg.getId());
         if (dbResource == null) {
             return;
         }
 
         //只有当show/identity发生改变时才清理缓存
-        if (!dbResource.getShow().equals(resource.getShow())
-                || !dbResource.getIdentity().equals(resource.getIdentity())) {
+        if (!dbResource.getShow().equals(arg.getShow())
+                || !dbResource.getIdentity().equals(arg.getIdentity())) {
 
             log.debug("cacheName:{}, method:resourceMaybeCacheClearAllAdvice, cache clear", cacheName);
             clear();
@@ -483,18 +271,17 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
     @Before(value = "permissionServicePointcut() && permissionMaybeCacheEvictAllPointcut(arg)", argNames = "arg")
     public void permissionMaybeCacheClearAllAdvice(Permission arg) {
 
-        Permission permission = arg;
-        if (permission == null) {
+        if (arg == null) {
             return;
         }
-        Permission dbPermission = permissionService.findOne(permission.getId());
+        Permission dbPermission = permissionService.findOne(arg.getId());
         if (dbPermission == null) {
             return;
         }
 
         //只有当show/permission发生改变时才清理缓存
-        if (!dbPermission.getShow().equals(permission.getShow())
-                || !dbPermission.getPermission().equals(permission.getPermission())) {
+        if (!dbPermission.getShow().equals(arg.getShow())
+                || !dbPermission.getPermission().equals(arg.getPermission())) {
 
             log.debug("cacheName:{}, method:permissionMaybeCacheClearAllAdvice, cache clear", cacheName);
             clear();
@@ -503,63 +290,58 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
 
     @Before(value = "roleServicePointcut() && roleMaybeCacheEvictAllPointcut(arg)", argNames = "arg")
     public void roleMaybeCacheClearAllAdvice(Role arg) {
-        Role role = arg;
-        if (role == null) {
+        if (arg == null) {
             return;
         }
-        Role dbRole = roleService.findOne(role.getId());
+        Role dbRole = roleService.findOne(arg.getId());
         if (dbRole == null) {
             return;
         }
 
         //只有当show/role发生改变时才清理缓存
-        if (!dbRole.getShow().equals(role.getShow())
-                || !dbRole.getRole().equals(role.getRole())
-                || !(dbRole.getResourcePermissions().size() == role.getResourcePermissions().size()
-                && dbRole.getResourcePermissions().containsAll(role.getResourcePermissions()))) {
+        if (!dbRole.getShow().equals(arg.getShow())
+                || !dbRole.getRole().equals(arg.getRole())
+                || !(dbRole.getResourcePermissions().size() == arg.getResourcePermissions().size()
+                && dbRole.getResourcePermissions().containsAll(arg.getResourcePermissions()))) {
 
             log.debug("cacheName:{}, method:roleMaybeCacheClearAllAdvice, cache clear", cacheName);
             clear();
         }
     }
 
-
     @Before(value = "organizationServicePointcut() && organizationMaybeCacheEvictAllPointcut(arg)", argNames = "arg")
     public void organizationMaybeCacheClearAllAdvice(Organization arg) {
 
-        Organization organization = arg;
-        if (organization == null) {
+        if (arg == null) {
             return;
         }
-        Organization dbOrganization = organizationService.findOne(organization.getId());
+        Organization dbOrganization = organizationService.findOne(arg.getId());
         if (dbOrganization == null) {
             return;
         }
 
         //只有当show/parentId发生改变时才清理缓存
-        if (!dbOrganization.getShow().equals(organization.getShow())
-                || !dbOrganization.getParentId().equals(organization.getParentId())) {
+        if (!dbOrganization.getShow().equals(arg.getShow())
+                || !dbOrganization.getParentId().equals(arg.getParentId())) {
 
             log.debug("cacheName:{}, method:organizationMaybeCacheClearAllAdvice, cache clear", cacheName);
             clear();
         }
     }
 
-
     @Before(value = "jobServicePointcut() && jobMaybeCacheEvictAllPointcut(arg)", argNames = "arg")
     public void jobMaybeCacheClearAllAdvice(Job arg) {
-        Job job = arg;
-        if (job == null) {
+        if (arg == null) {
             return;
         }
-        Job dbJob = jobService.findOne(job.getId());
+        Job dbJob = jobService.findOne(arg.getId());
         if (dbJob == null) {
             return;
         }
 
         //只有当show/parentId发生改变时才清理缓存
-        if (!dbJob.getShow().equals(job.getShow())
-                || !dbJob.getParentId().equals(job.getParentId())) {
+        if (!dbJob.getShow().equals(arg.getShow())
+                || !dbJob.getParentId().equals(arg.getParentId())) {
 
             log.debug("cacheName:{}, method:jobMaybeCacheClearAllAdvice, cache clear", cacheName);
             clear();
@@ -568,48 +350,24 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
 
     @Before(value = "groupServicePointcut() && groupMaybeCacheEvictAllPointcut(arg)", argNames = "arg")
     public void groupMaybeCacheClearAllAdvice(Group arg) {
-        Group group = arg;
-        if (group == null) {
+        if (arg == null) {
             return;
         }
-        Group dbGroup = groupService.findOne(group.getId());
+        Group dbGroup = groupService.findOne(arg.getId());
         if (dbGroup == null) {
             return;
         }
 
         //只有当修改组的默认组/show时才清理缓存
-        if (!dbGroup.getShow().equals(group.getShow())
-                || !dbGroup.getDefaultGroup().equals(group.getDefaultGroup())) {
+        if (!dbGroup.getShow().equals(arg.getShow())
+                || !dbGroup.getDefaultGroup().equals(arg.getDefaultGroup())) {
 
             log.debug("cacheName:{}, method:groupMaybeCacheClearAllAdvice, cache clear", cacheName);
             clear();
         }
     }
 
-    /**
-     * @param r
-     * @return 如果清除所有 返回true，否则false
-     */
-    private boolean evictForGroupRelation(GroupRelation r) {
-        //如果是非某个用户，清理所有缓存
-        if (r.getStartUserId() != null || r.getEndUserId() != null || r.getOrganizationId() != null) {
-
-            log.debug("cacheName:{}, method:evictForGroupRelation, cache clear", cacheName);
-            clear();
-            return true;
-        }
-        if (r.getUserId() != null) {// 当添加/修改/删除的是某个用户的，只清理这个用户的缓存
-            evict(r.getUserId());
-            GroupRelation dbR = groupRelationService.findOne(r.getId());
-            if (dbR != null && !dbR.getUserId().equals(r.getUserId())) { //如果a用户替换为b用户时清理两个用户的缓存
-
-                log.debug("cacheName:{}, method:evictForGroupRelation, evict userId:{}", cacheName, dbR.getUserId());
-                evict(dbR.getUserId());
-            }
-        }
-        return false;
-    }
-
+    @SuppressWarnings("UnnecessaryReturnStatement")
     @Before(value = "groupRelationServicePointcut() && groupRelationMaybeCacheEvictAllOrSpecialPointcut(arg)", argNames = "jp,arg")
     public void groupRelationMaybeCacheClearAllOrSpecialAdvice(JoinPoint jp, Object arg) {
         String methodName = jp.getSignature().getName();
@@ -650,7 +408,6 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
         }
     }
 
-
     @Before(value = "userServicePointcut() && userCacheEvictSpecialPointcut(arg)", argNames = "jp,arg")
     public void userMaybeCacheClearSpecialAdvice(JoinPoint jp, Object arg) {
         String methodName = jp.getSignature().getName();
@@ -665,7 +422,6 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
                         cacheName, user.getId());
                 evict(user.getId());
             }
-
 
         } else if ("delete".equals(methodName)) {//删除情况
             if (arg instanceof Long) {
@@ -685,11 +441,6 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
             }
         }
     }
-
-
-    //////////////////////////////////////////////////////////////////////////////////
-    ////缓存相关
-    //////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void clear() {
@@ -711,6 +462,231 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
         resourceMenuCacheAspect.evict(userId);//当权限过期 同时清理菜单的
     }
 
+    /**
+     * 2、授权（Auth）
+     * 当增删改授权时，
+     * 如果是用户相关的，只删用户的即可，
+     * 其他的全部清理
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.auth.service.AuthService)")
+    private void authServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* addGroupAuth(..)) " +
+            "|| execution(* addOrganizationJobAuth(..)) " +
+            "|| execution(* addOrganizationJobAuth(..))")
+    private void authCacheEvictAllPointcut() {
+    }
+
+    @Pointcut(value = "(execution(* addUserAuth(*,..)) && args(arg, ..)) " +
+            "|| (execution(* update(*)) && args(arg)) " +
+            "|| (execution(* save(*)) && args(arg)) " +
+            "|| (execution(* delete(*)) && args(arg))",
+            argNames = "arg")
+    private void authCacheEvictAllOrSpecialPointcut(Object arg) {
+    }
+
+    /**
+     * 3.1、资源（Resource）
+     * 当修改资源时判断是否发生变化（如resourceIdentity，是否显示），如果变了清缓存
+     * 当删除资源时，清缓存
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.resource.service.ResourceService)")
+    private void resourceServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* delete(..))")
+    private void resourceCacheEvictAllPointcut() {
+    }
+
+    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
+    private void resourceMaybeCacheEvictAllPointcut(Resource arg) {
+    }
+
+    /**
+     * 3.2、权限（Permission）
+     * 当修改权限时判断是否发生变化（如permission，是否显示），如果变了清缓存
+     * 当删除权限时，清缓存
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.permission.service.PermissionService)")
+    private void permissionServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* delete(..))")
+    private void permissionCacheEvictAllPointcut() {
+    }
+
+    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
+    private void permissionMaybeCacheEvictAllPointcut(Permission arg) {
+    }
+
+    /**
+     * 4、角色（Role）
+     * 当删除角色时，请缓存
+     * 当修改角色show/role/resourcePermissions关系时，清缓存
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.permission.service.RoleService)")
+    private void roleServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* delete(..))")
+    private void roleCacheEvictAllPointcut() {
+    }
+
+    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
+    private void roleMaybeCacheEvictAllPointcut(Role arg) {
+    }
+
+    /**
+     * 5.1、组织机构
+     * 当删除/修改show字段时，清缓存
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.organization.service.OrganizationService)")
+    private void organizationServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* delete(..))")
+    private void organizationCacheEvictAllPointcut() {
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    ////增强
+    //////////////////////////////////////////////////////////////////////////////////
+
+    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
+    private void organizationMaybeCacheEvictAllPointcut(Organization arg) {
+    }
+
+    /**
+     * 5.2、工作职务
+     * 当删除/修改show字段时，清缓存
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.organization.service.JobService)")
+    private void jobServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* delete(..))")
+    private void jobCacheEvictAllPointcut() {
+    }
+
+    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
+    private void jobMaybeCacheEvictAllPointcut(Job arg) {
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    ////可能清空特定/全部缓存
+    //////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 6。1、组
+     * 当修改组的默认组/show时，清缓存
+     * 当删除组时，清缓存
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.group.service.GroupService)")
+    private void groupServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* delete(..))")
+    private void groupCacheEvictAllPointcut() {
+    }
+
+    @Pointcut(value = "execution(* update(*)) && args(arg)", argNames = "arg")
+    private void groupMaybeCacheEvictAllPointcut(Group arg) {
+    }
+
+    /**
+     * 6.2、当删除组关系时
+     * 当添加/修改/删除的是某个用户的，只清理这个用户的缓存
+     * 其他情况，清所有
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.group.service.GroupRelationService)")
+    private void groupRelationServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* appendRelation(*,*))")
+    private void groupRelationCacheEvictAllPointcut() {
+    }
+
+    @Pointcut(value = "(execution(* delete(*)) && args(arg)) " +
+            "|| (execution(* update(*)) && args(arg)) " +
+            "|| execution(* appendRelation(*,*,*,*)) && args(*,arg,*,*) ", argNames = "arg")
+    private void groupRelationMaybeCacheEvictAllOrSpecialPointcut(Object arg) {
+    }
+
+    /**
+     * 7、用户
+     * 修改时，如果组织机构/工作职务变了，仅需清自己的缓存
+     */
+    @Pointcut(value = "target(com.realaicy.pg.sys.user.service.UserService)")
+    private void userServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* delete(*)) && args(arg) || execution(* update(*)) && args(arg)", argNames = "arg")
+    private void userCacheEvictSpecialPointcut(Object arg) {
+    }
+
+    @Pointcut(value = "target(com.realaicy.pg.sys.auth.service.UserAuthService)")
+    private void userAuthServicePointcut() {
+    }
+
+    @Pointcut(value = "execution(* findRoles(*)) && args(arg)", argNames = "arg")
+    private void cacheFindRolesPointcut(User arg) {
+    }
+
+    @Pointcut(value = "execution(* findStringRoles(*)) && args(arg)", argNames = "arg")
+    private void cacheFindStringRolesPointcut(User arg) {
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    ////缓存相关
+    //////////////////////////////////////////////////////////////////////////////////
+
+    @Pointcut(value = "execution(* findStringPermissions(*)) && args(arg)", argNames = "arg")
+    private void cacheFindStringPermissionsPointcut(User arg) {
+    }
+
+    /**
+     * @param auth xxx
+     * @return 如果清空所有返回true 否则false
+     */
+    private boolean evictWithAuth(Auth auth) {
+        boolean needEvictSpecail = auth != null && auth.getUserId() != null && auth.getGroupId() == null && auth.getOrganizationId() == null;
+        if (needEvictSpecail) {
+            Long userId = auth.getUserId();
+            log.debug("cacheName:{}, method:evictWithAuth, evict userId:{}", cacheName, userId);
+            evict(userId);
+            return false;
+        } else {
+            log.debug("cacheName:{}, method:evictWithAuth, cache clear", cacheName);
+            clear();
+            return true;
+        }
+    }
+
+    /**
+     * @param r xxx
+     * @return 如果清除所有 返回true，否则false
+     */
+    private boolean evictForGroupRelation(GroupRelation r) {
+        //如果是非某个用户，清理所有缓存
+        if (r.getStartUserId() != null || r.getEndUserId() != null || r.getOrganizationId() != null) {
+
+            log.debug("cacheName:{}, method:evictForGroupRelation, cache clear", cacheName);
+            clear();
+            return true;
+        }
+        if (r.getUserId() != null) {// 当添加/修改/删除的是某个用户的，只清理这个用户的缓存
+            evict(r.getUserId());
+            GroupRelation dbR = groupRelationService.findOne(r.getId());
+            if (dbR != null && !dbR.getUserId().equals(r.getUserId())) { //如果a用户替换为b用户时清理两个用户的缓存
+
+                log.debug("cacheName:{}, method:evictForGroupRelation, evict userId:{}", cacheName, dbR.getUserId());
+                evict(dbR.getUserId());
+            }
+        }
+        return false;
+    }
+
     private String rolesKey(Long userId) {
         return this.rolesKeyPrefix + userId;
     }
@@ -722,6 +698,5 @@ public class UserAuthCacheAspect extends BaseCacheAspect {
     private String stringPermissionsKey(Long userId) {
         return this.stringPermissionsKeyPrefix + userId;
     }
-
 
 }

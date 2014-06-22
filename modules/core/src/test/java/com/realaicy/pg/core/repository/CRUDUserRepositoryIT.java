@@ -57,7 +57,7 @@ public class CRUDUserRepositoryIT extends BaseUserIT {
         User dbUser = userRepository.save(user);
         clear();
 
-        String newUsername = "zhang$$$$" + System.currentTimeMillis();
+        String newUsername = "liu$$$$" + System.currentTimeMillis();
         dbUser.setUsername(newUsername);
         userRepository.save(dbUser);
 

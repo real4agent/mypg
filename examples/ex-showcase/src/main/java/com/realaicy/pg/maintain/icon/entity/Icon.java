@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.maintain.icon.entity;
 
 import com.realaicy.pg.core.entity.BaseEntity;
@@ -10,11 +5,15 @@ import com.realaicy.pg.core.entity.BaseEntity;
 import javax.persistence.*;
 
 /**
- * 图标管理
- * class方式 和
- * <p>User: Zhang Kaitao
- * <p>Date: 13-4-19 上午7:13
- * <p>Version: 1.0
+ * 实体：图标
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Entity
 @Table(name = "maintain_icon")
@@ -58,7 +57,6 @@ public class Icon extends BaseEntity<Long> {
     @Column(name = "top")
     private Integer top;
 
-
     /**
      * 宽度
      */
@@ -80,7 +78,6 @@ public class Icon extends BaseEntity<Long> {
      * 描述
      */
     private String description;
-
 
     public String getIdentity() {
         return identity;

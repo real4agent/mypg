@@ -66,8 +66,8 @@ public class SearchableMethodArgumentResolverNGTest {
         request.setParameter("sort1.baseInfo.realname", "asc");
         request.setParameter("sort2.id", "desc");
 
-        request.setParameter("search.baseInfo.realname_like", "zhang");
-        request.setParameter("search.username_eq", "zhang");
+        request.setParameter("search.baseInfo.realname_like", "liu");
+        request.setParameter("search.username_eq", "liu");
 
         MethodParameter parameter = new MethodParameter(searchable, 0);
         NativeWebRequest webRequest = new ServletWebRequest(request);
@@ -83,16 +83,16 @@ public class SearchableMethodArgumentResolverNGTest {
         assertEquals(expectedSort, searchable.getSort());
 
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("username", SearchOperator.eq, "zhang"), searchable);
+                newCondition("username", SearchOperator.eq, "liu"), searchable);
     }
 
     @Test
     public void testSearchableWithDefaultPage() throws Exception {
 
-        request.setParameter("search.baseInfo.realname_like", "zhang");
-        request.setParameter("search.username_eq", "zhang");
+        request.setParameter("search.baseInfo.realname_like", "liu");
+        request.setParameter("search.username_eq", "liu");
 
         MethodParameter parameter = new MethodParameter(searchable, 0);
         NativeWebRequest webRequest = new ServletWebRequest(request);
@@ -105,9 +105,9 @@ public class SearchableMethodArgumentResolverNGTest {
         assertEquals(null, searchable.getPage().getSort());
 
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("username", SearchOperator.eq, "zhang"), searchable);
+                newCondition("username", SearchOperator.eq, "liu"), searchable);
 
     }
 
@@ -122,8 +122,8 @@ public class SearchableMethodArgumentResolverNGTest {
         request.setParameter("sort1.baseInfo.realname", "asc");
         request.setParameter("sort2.id", "desc");
 
-        request.setParameter("search.baseInfo.realname_like", "zhang");
-        request.setParameter("search.username_eq", "zhang");
+        request.setParameter("search.baseInfo.realname_like", "liu");
+        request.setParameter("search.username_eq", "liu");
 
         MethodParameter parameter = new MethodParameter(searchableAndNoPageAndSort, 0);
         NativeWebRequest webRequest = new ServletWebRequest(request);
@@ -137,9 +137,9 @@ public class SearchableMethodArgumentResolverNGTest {
         assertEquals(expectedSort, searchable.getSort());
 
         assertContainsSearchFilter(SearchFilterHelper
-                .newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                .newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper
-                .newCondition("username", SearchOperator.eq, "zhang"), searchable);
+                .newCondition("username", SearchOperator.eq, "liu"), searchable);
     }
 
     @Test
@@ -153,8 +153,8 @@ public class SearchableMethodArgumentResolverNGTest {
         request.setParameter("sort1.baseInfo.realname", "asc");
         request.setParameter("sort2.id", "desc");
 
-        request.setParameter("search.baseInfo.realname_like", "zhang");
-        request.setParameter("search.username_eq", "zhang");
+        request.setParameter("search.baseInfo.realname_like", "liu");
+        request.setParameter("search.username_eq", "liu");
 
         MethodParameter parameter = new MethodParameter(searchableAndNoPageAndNoSort, 0);
         NativeWebRequest webRequest = new ServletWebRequest(request);
@@ -166,9 +166,9 @@ public class SearchableMethodArgumentResolverNGTest {
         assertEquals(null, searchable.getSort());
 
         assertContainsSearchFilter(SearchFilterHelper
-                .newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                .newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper
-                .newCondition("username", SearchOperator.eq, "zhang"), searchable);
+                .newCondition("username", SearchOperator.eq, "liu"), searchable);
     }
 
     @Test
@@ -195,7 +195,7 @@ public class SearchableMethodArgumentResolverNGTest {
         assertEquals(expectedSort, searchable.getSort());
 
         assertContainsSearchFilter(SearchFilterHelper
-                .newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                .newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper
                 .newCondition("id", SearchOperator.eq, "1"), searchable);
     }
@@ -224,7 +224,7 @@ public class SearchableMethodArgumentResolverNGTest {
         assertEquals(expectedSort, searchable.getSort());
 
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper.
                 newCondition("id", SearchOperator.eq, "1"), searchable);
     }
@@ -239,8 +239,8 @@ public class SearchableMethodArgumentResolverNGTest {
         request.setParameter("sort1.baseInfo.realname", "asc");
         request.setParameter("sort2.id", "desc");
 
-        request.setParameter("search.baseInfo.realname_like", "zhang");
-        request.setParameter("search.username_eq", "zhang");
+        request.setParameter("search.baseInfo.realname_like", "liu");
+        request.setParameter("search.username_eq", "liu");
 
         MethodParameter parameter = new MethodParameter(parameterDefaultSearchable, 0);
         NativeWebRequest webRequest = new ServletWebRequest(request);
@@ -256,9 +256,9 @@ public class SearchableMethodArgumentResolverNGTest {
         assertEquals(expectedSort, searchable.getSort());
 
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("username", SearchOperator.eq, "zhang"), searchable);
+                newCondition("username", SearchOperator.eq, "liu"), searchable);
     }
 
     @Test
@@ -271,8 +271,8 @@ public class SearchableMethodArgumentResolverNGTest {
         request.setParameter("foo_sort1.baseInfo.realname", "asc");
         request.setParameter("foo_sort2.id", "desc");
 
-        request.setParameter("foo_search.baseInfo.realname_like", "zhang");
-        request.setParameter("foo_search.username_eq", "zhang");
+        request.setParameter("foo_search.baseInfo.realname_like", "liu");
+        request.setParameter("foo_search.username_eq", "liu");
 
         MethodParameter parameter = new MethodParameter(customNamePrefixSearchableAndPageableAndSort, 0);
         NativeWebRequest webRequest = new ServletWebRequest(request);
@@ -288,15 +288,15 @@ public class SearchableMethodArgumentResolverNGTest {
         assertEquals(expectedSort, searchable.getSort());
 
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("username", SearchOperator.eq, "zhang"), searchable);
+                newCondition("username", SearchOperator.eq, "liu"), searchable);
     }
 
     @Test
     public void testMergeDefaultSearchableWithSearchParams() throws Exception {
 
-        request.setParameter("search.username_eq", "zhang");
+        request.setParameter("search.username_eq", "liu");
 
         MethodParameter parameter = new MethodParameter(methodMergeDefaultSearchable, 0);
         NativeWebRequest webRequest = new ServletWebRequest(request);
@@ -304,9 +304,9 @@ public class SearchableMethodArgumentResolverNGTest {
                 resolveArgument(parameter, null, webRequest, null);
 
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("baseInfo.realname", SearchOperator.like, "zhang"), searchable);
+                newCondition("baseInfo.realname", SearchOperator.like, "liu"), searchable);
         assertContainsSearchFilter(SearchFilterHelper.
-                newCondition("username", SearchOperator.eq, "zhang"), searchable);
+                newCondition("username", SearchOperator.eq, "liu"), searchable);
     }
 
     private void assertContainsSearchFilter(SearchFilter expected, Searchable searchable) {
@@ -340,13 +340,13 @@ public class SearchableMethodArgumentResolverNGTest {
         public void searchableAndNoPageAndNoSort(Searchable searchable) {
         }
 
-        @SearchableDefaults(value = {"baseInfo.realname_like=zhang", "id_eq=1"}, needPage = true)
+        @SearchableDefaults(value = {"baseInfo.realname_like=liu", "id_eq=1"}, needPage = true)
         @PageableDefaults(value = DEFAULT_PAGESIZE, pageNumber = DEFAULT_PAGENUMBER, sort = {"id=desc", "name=asc"})
         public void methodDefaultSearchable(Searchable searchable) {
         }
 
         public void parameterDefaultSearchable(
-                @SearchableDefaults(value = {"baseInfo.realname_like=zhang", "id_eq=1"}, needPage = true)
+                @SearchableDefaults(value = {"baseInfo.realname_like=liu", "id_eq=1"}, needPage = true)
                 @PageableDefaults(value = DEFAULT_PAGESIZE, pageNumber = DEFAULT_PAGENUMBER, sort = {"id=desc", "name=asc"})
                 Searchable searchable) {
         }
@@ -355,7 +355,7 @@ public class SearchableMethodArgumentResolverNGTest {
                 @Qualifier("foo") Searchable foo, @Qualifier("test") Searchable test) {
         }
 
-        @SearchableDefaults(value = {"baseInfo.realname_like=zhang"}, merge = true, needPage = true)
+        @SearchableDefaults(value = {"baseInfo.realname_like=liu"}, merge = true, needPage = true)
         @PageableDefaults(value = DEFAULT_PAGESIZE, pageNumber = DEFAULT_PAGENUMBER, sort = {"id=desc", "name=asc"})
         public void methodMergeDefaultSearchable(Searchable searchable) {
         }

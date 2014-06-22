@@ -7,7 +7,7 @@
     <groupId>com.realaicy.pangoo</groupId>
     <artifactId>pangoo-project</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.6</version>
+    <version>0.9.7</version>
     <modules>
         <module>modules</module>
         <module>examples</module>

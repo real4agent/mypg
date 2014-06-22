@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2005-2012 https://github.com/zhangkaitao
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- */
 package com.realaicy.pg.showcase.product.web.controller;
 
 import com.realaicy.pg.core.entity.enums.BooleanEnum;
@@ -21,9 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 13-1-28 下午4:29
- * <p>Version: 1.0
+ * SD-JPA-Controller：产品类别
+ * <p/>
+ *
+ * @author realaicy
+ * @version 1.1
+ * @email realaicy@gmail.com
+ * @qq 8042646
+ * @date 14-2-1 上午9:18
+ * @description TODO
+ * @since 1.1
  */
 @Controller
 @RequestMapping(value = "/showcase/product/category")
@@ -36,12 +38,6 @@ public class CategoryController extends BaseMovableController<Category, Long> {
     public CategoryController() {
         setResourceIdentity("showcase:productCategory");
     }
-
-    @Override
-    protected void setCommonData(Model model) {
-        model.addAttribute("booleanList", BooleanEnum.values());
-    }
-
 
     //selectType  multiple single
     @RequestMapping(value = {"select/{selectType}", "select"}, method = RequestMethod.GET)
@@ -60,5 +56,10 @@ public class CategoryController extends BaseMovableController<Category, Long> {
 
         super.list(searchable, model);
         return "showcase/product/category/select";
+    }
+
+    @Override
+    protected void setCommonData(Model model) {
+        model.addAttribute("booleanList", BooleanEnum.values());
     }
 }

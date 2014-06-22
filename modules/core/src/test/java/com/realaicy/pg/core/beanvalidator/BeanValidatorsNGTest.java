@@ -1,10 +1,10 @@
 package com.realaicy.pg.core.beanvalidator;
 
-import com.realaicy.pg.core.test.spring.SpringContextNGTestCase;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -21,7 +21,7 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
 @ContextConfiguration(locations = {"/applicationContext-core-test.xml"})
-public class BeanValidatorsNGTest extends SpringContextNGTestCase {
+public class BeanValidatorsNGTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     Validator validator;

@@ -70,8 +70,6 @@ public class MessageController extends BaseController<Message, Long> {
 
     /**
      * 仅返回表格数据
-     *
-     * @return
      */
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "table=true")
     @PageableDefaults(sort = "id=desc")

@@ -43,7 +43,7 @@ public class UserServiceNGTest extends BaseUserNGTest {
         User dbUser = userService.save(createUser());
         clear();
 
-        String newUsername = "zhang$$$$" + System.currentTimeMillis();
+        String newUsername = "liu$$$$" + System.currentTimeMillis();
         dbUser.setUsername(newUsername);
         userService.update(dbUser);
 
@@ -170,12 +170,12 @@ public class UserServiceNGTest extends BaseUserNGTest {
         User lastUser = null;
         for (int i = 0; i < count; i++) {
             lastUser = createUser();
-            lastUser.setUsername("zhang" + i);
+            lastUser.setUsername("liu" + i);
             userService.save(lastUser);
         }
 
         Map<String, Object> searchParams = new HashMap<String, Object>();
-        searchParams.put("username_like", "zhang");
+        searchParams.put("username_like", "liu");
         Searchable search = Searchable.newSearchable(searchParams);
 
         List<User> userList = userService.findAllWithNoPageNoSort(search);
@@ -189,12 +189,12 @@ public class UserServiceNGTest extends BaseUserNGTest {
         User lastUser = null;
         for (int i = 0; i < count; i++) {
             lastUser = createUser();
-            lastUser.setUsername("zhang" + i);
+            lastUser.setUsername("liu" + i);
             userService.save(lastUser);
         }
 
         Map<String, Object> searchParams = new HashMap<String, Object>();
-        searchParams.put("username_like", "zhang");
+        searchParams.put("username_like", "liu");
         Sort sortDesc = new Sort(Sort.Direction.DESC, "id");
         Searchable search = Searchable.newSearchable(searchParams).addSort(sortDesc);
 
@@ -216,7 +216,7 @@ public class UserServiceNGTest extends BaseUserNGTest {
         Sort sortAsc = new Sort(Sort.Direction.ASC, "id");
         Pageable pageable = new PageRequest(0, 5, sortAsc);
         Map<String, Object> searchParams = new HashMap<String, Object>();
-        searchParams.put("username_like", "zhang");
+        searchParams.put("username_like", "liu");
         Searchable search = Searchable.newSearchable(searchParams).setPage(pageable);
 
         Page<User> userPage = userService.findAll(search);
