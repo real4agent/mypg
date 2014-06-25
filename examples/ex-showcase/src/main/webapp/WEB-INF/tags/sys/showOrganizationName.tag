@@ -1,4 +1,4 @@
-<%@ tag pageEncoding="UTF-8"%>
+<%@ tag pageEncoding="UTF-8" %>
 <%@ tag import="com.google.common.collect.Lists" %>
 <%@ tag import="com.realaicy.pg.core.utils.SpringUtils" %>
 <%@ tag import="com.realaicy.pg.sys.organization.entity.Organization" %>
@@ -10,45 +10,42 @@
 <%!private OrganizationService organizationService;%>
 <%
 
-    if(showParents == null) {
+    if (showParents == null) {
         showParents = true;
     }
-    if(includeRoot == null) {
+    if (includeRoot == null) {
         includeRoot = true;
     }
 
-    if(organizationService == null) {
+    if (organizationService == null) {
         organizationService = SpringUtils.getBean(OrganizationService.class);
     }
 
     Organization organization = organizationService.findOne(id);
 
-    if(organization == null) {
+    if (organization == null) {
         out.write("<span class='label label-important'>删除的数据，请修改</span>");
         return;
     }
 
     List<String> names = Lists.newArrayList();
-    if (organization != null) {
-        names.add(organization.getName());
+    names.add(organization.getName());
 
-        if(showParents == true) {
-            List<Organization> parents = organizationService.findAncestor(organization.getParentIds());
-            for(Organization o : parents) {
-                if(includeRoot == false && organization.isRoot()) {
-                    continue;
-                }
-                names.add(o.getName());
+    if (showParents) {
+        List<Organization> parents = organizationService.findAncestor(organization.getParentIds());
+        for (Organization o : parents) {
+            if (!includeRoot && organization.isRoot()) {
+                continue;
             }
+            names.add(o.getName());
         }
-
     }
 
     StringBuilder s = new StringBuilder();
     s.append(String.format("<a class='btn btn-link no-padding' href='%s/admin/sys/organization/organization/%d'>", request.getContextPath(), id));
 
-    for(int l = names.size() - 1, i = l; i >= 0; i--) {
-        if(i != l) {
+    for (int l = names.size() - 1, i = l; i >= 0; i--) {
+        if (i != l) {
             s.append(" &gt; ");
         }
         s.append(names.get(i));

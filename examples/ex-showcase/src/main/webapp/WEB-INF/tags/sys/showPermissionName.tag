@@ -1,18 +1,18 @@
 <%@ tag import="com.realaicy.pg.core.utils.SpringUtils" %>
 <%@ tag import="com.realaicy.pg.sys.permission.entity.Permission" %>
 <%@ tag import="com.realaicy.pg.sys.permission.service.PermissionService" %>
-<%@ tag pageEncoding="UTF-8"%>
+<%@ tag pageEncoding="UTF-8" %>
 <%@ attribute name="id" type="java.lang.Long" required="true" description="当前要展示的组织机构的名字" %>
 <%!private PermissionService permissionService;%>
 <%
 
-    if(permissionService == null) {
+    if (permissionService == null) {
         permissionService = SpringUtils.getBean(PermissionService.class);
     }
 
     Permission permission = permissionService.findOne(id);
 
-    if(permission == null) {
+    if (permission == null) {
         out.write("<span class='label label-important'>删除的数据，请修改</span>");
         return;
     }
