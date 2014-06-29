@@ -3,7 +3,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>pangoo-modules</artifactId>
+        <artifactId>pangoo-parent</artifactId>
         <groupId>com.realaicy.pangoo</groupId>
         <version>0.9.7</version>
     </parent>
@@ -12,12 +12,31 @@
     <artifactId>study</artifactId>
     <dependencies>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.2</version>
+            <groupId>com.realaicy.pangoo</groupId>
+            <artifactId>pangoo-core</artifactId>
+            <version>0.9.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
+    <properties>
+        <log.dir>H:/DemoLogs/pg/study/${project.version}</log.dir>
+        <mysql.version>5.1.27</mysql.version>
+        <testng.version>6.8.8</testng.version>
+
+    </properties>
 
 
 </project>

@@ -6,3 +6,4 @@ target/
 *.iml
 *.bak
 .idea/
+*.log
